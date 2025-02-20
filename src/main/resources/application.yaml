@@ -1,0 +1,21 @@
+SECRET_KEY: "VIEBE6HX0OPC6HX0VGAUDINUPRBEOPC6HX0VGGHAAOAKG"
+
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: method
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: vietyts2003@gmail.com
+    password: icncudwesvprdqde
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+
+
+
+
+
