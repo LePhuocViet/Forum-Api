@@ -41,7 +41,7 @@ public class Users {
 
     String password;
 
-    StatusUser status;
+    String status;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
     Set<Roles> roles;
