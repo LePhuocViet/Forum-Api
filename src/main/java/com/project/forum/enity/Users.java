@@ -41,6 +41,7 @@ public class Users {
 
     String password;
 
+    @Enumerated(EnumType.STRING)
     StatusUser status;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
