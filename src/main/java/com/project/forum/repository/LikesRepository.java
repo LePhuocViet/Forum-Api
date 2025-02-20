@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 public interface LikesRepository extends JpaRepository<Likes, String> {
 
     boolean existsByPosts_IdAndUsers_Id(String posts_Id, String users_Id);
+
+    void deleteByPosts_IdAndUsers_Id(String posts_Id, String users_Id);
 }

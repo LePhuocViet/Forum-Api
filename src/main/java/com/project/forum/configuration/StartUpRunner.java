@@ -82,6 +82,8 @@ public class StartUpRunner {
                 Roles userRole = rolesRepository.findByName(RolesCode.USER.toString()).orElseThrow(() -> new WebException(ErrorCode.E_ROLE_NOT_FOUND));
                 Roles employeeRole = rolesRepository.findByName(RolesCode.EMPLOYEE.toString()).orElseThrow(() -> new WebException(ErrorCode.E_ROLE_NOT_FOUND));
                 // Tạo user admin
+//                Set<Roles> set = new HashSet<>();
+//                set.add(role.get());
                 Users admin = Users.builder()
                         .username("admin")
                         .password(passwordEncoder.encode("admin123"))
@@ -90,7 +92,7 @@ public class StartUpRunner {
                         .email("admin@admin.com")
                         .gender("Male")
                         .language("English")
-                        .status(StatusUser.ACTIVE)
+                        .status(StatusUser.ACTIVE.toString())
                         .build();
 
                 usersRepository.save(admin);

@@ -51,7 +51,7 @@ public class UserService implements IUserService {
             throw new WebException(ErrorCode.E_EMAIL_IS_EXISTS);
         }
         Users users = userMapper.toUsers(createUserDto);
-        users.setStatus(StatusUser.INACTIVE);
+        users.setStatus(StatusUser.INACTIVE.toString());
         users.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
         Roles roles = rolesRepository.findByName(RolesCode.USER.toString()).orElseThrow(() -> new WebException(ErrorCode.E_ROLE_NOT_FOUND));
         users.setRoles(Collections.singleton(roles));
@@ -62,7 +62,7 @@ public class UserService implements IUserService {
     @Override
     public UserResponse setStatus(String id, StatusUser statusUser) {
         Users users = usersRepository.findById(id).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        users.setStatus(statusUser);
+        users.setStatus(statusUser.getActive());
         usersRepository.save(users);
         return userMapper.toUserResponse(users);
     }

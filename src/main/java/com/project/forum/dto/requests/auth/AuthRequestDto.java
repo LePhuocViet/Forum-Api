@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.misc.NotNull;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
-
+@NoArgsConstructor
 public class AuthRequestDto {
 
     @NotNull

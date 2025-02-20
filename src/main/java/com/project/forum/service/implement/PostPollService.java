@@ -69,14 +69,14 @@ public class PostPollService implements IPostPollService {
                 .orElseThrow(() -> new WebException(ErrorCode.E_LANGUAGE_NOT_FOUND));
         Posts posts = Posts.builder()
                 .users(users)
-                .type_post(TypePost.POLL)
+                .type_post(TypePost.POLL.toString())
                 .language(language)
                 .build();
         posts = postsRepository.save(posts);
 
         PostPoll postPoll = PostPoll.builder()
                 .posts(posts)
-                .typePoll(createPostPollDto.getTypePoll())
+                .typePoll(createPostPollDto.getTypePoll().toString())
                 .question(createPostPollDto.getQuestion())
                 .pollOptions(new ArrayList<>())
                 .build();

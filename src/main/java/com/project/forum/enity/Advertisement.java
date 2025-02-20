@@ -26,7 +26,7 @@ public class Advertisement {
 
     int views;
 
-    StatusAds status;
+    String status;
 
     @CreatedDate()
     @Column(updatable = false)

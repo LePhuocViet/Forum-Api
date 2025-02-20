@@ -15,6 +15,7 @@ import com.project.forum.exception.WebException;
 import com.project.forum.repository.UsersRepository;
 import com.project.forum.service.IAuthService;
 import com.project.forum.service.ICacheService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -122,10 +123,14 @@ public class AuthService implements IAuthService {
             Users users = usersRepository.findByUsername(username)
                     .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
             if (!users.getStatus().equals(StatusUser.ACTIVE)){
-                throw new WebException(ErrorCode.E_USER_NOT_ACTIVE);
+                return AuthResponse.builder()
+                        .authorized(false)
+                        .token(token)
+                        .build();
             } else {
                 return AuthResponse.builder()
                         .authorized(true)
+                        .token(token)
                         .build();
             }
         } catch (JOSEException e) {
@@ -136,6 +141,30 @@ public class AuthService implements IAuthService {
 
     }
 
+    @Override
+    public String extractToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+        return null;
+    }
+
+    @Override
+    public String getUserIdFromToken(String token) {
+        try {
+            SignedJWT signedJWT = verify(token);
+            String username = signedJWT.getJWTClaimsSet().getSubject();
+            Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+            return users.getId();
+
+        } catch (JOSEException e) {
+            throw new WebException(ErrorCode.E_TOKEN_EXPIRED);
+        } catch (ParseException e) {
+            throw new WebException(ErrorCode.E_TOKEN_EXPIRED);
+        }
+
+    }
 
     SignedJWT verify(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(secret_key.getBytes());

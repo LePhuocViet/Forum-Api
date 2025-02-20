@@ -25,7 +25,7 @@ public class PostPoll {
 
     String question;
 
-    TypePoll typePoll;
+    String typePoll;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id")

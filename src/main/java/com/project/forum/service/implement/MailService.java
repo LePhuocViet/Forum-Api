@@ -99,7 +99,7 @@ public class MailService implements IMailService {
                 if (users.getStatus().equals(StatusUser.ACTIVE)) {
                     throw new WebException(ErrorCode.E_USER_IS_ACTIVE);
                 }
-                users.setStatus(StatusUser.ACTIVE);
+                users.setStatus(StatusUser.ACTIVE.toString());
                 usersRepository.save(users);
                 return MailResponse.builder()
                         .message("Active Success")

@@ -26,7 +26,7 @@ public class Posts {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    TypePost type_post;
+    String type_post;
 
     @CreatedDate()
     @Column(updatable = false)

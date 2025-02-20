@@ -31,6 +31,12 @@ public class Notices {
 
     boolean status;
 
+    String post_id;
+
+    String comment_id;
+
+    String type;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     Users users;

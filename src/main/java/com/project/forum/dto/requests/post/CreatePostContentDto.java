@@ -5,12 +5,12 @@ import com.project.forum.enity.Language;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Data
+@Builder
+@Getter
+@Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreatePostContentDto {
 
     String title;

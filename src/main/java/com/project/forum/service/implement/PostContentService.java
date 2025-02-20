@@ -49,7 +49,7 @@ public class PostContentService implements IPostContentService {
         Language language = languageRepository.findByName(createPostContentDto.getLanguage()).orElseThrow(() -> new WebException(ErrorCode.E_LANGUAGE_NOT_FOUND) );
         Posts posts = Posts.builder()
                 .language(language)
-                .type_post(TypePost.CONTENT)
+                .type_post(TypePost.CONTENT.toString())
                 .users(user)
                 .build();
         postsRepository.save(posts);

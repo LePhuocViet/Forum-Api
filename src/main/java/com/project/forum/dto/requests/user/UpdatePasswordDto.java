@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@NoArgsConstructor
 public class UpdatePasswordDto {
     String password;
     String rePassword;
