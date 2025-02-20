@@ -7,6 +7,7 @@ import com.project.forum.exception.ApiResponse;
 import com.project.forum.service.IPostPollService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,7 @@ public class PostPollController {
 
     @PostMapping()
     ResponseEntity<ApiResponse<PostResponse>> create(@RequestBody CreatePostPollDto createPostPollDto) {
-        return ResponseEntity.ok(ApiResponse.<PostResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PostResponse>builder()
                 .data(postPollService.create(createPostPollDto))
                 .build());
     }

@@ -10,6 +10,7 @@ import com.project.forum.service.IPostPollService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class PostContentController {
     @SecurityRequirement(name = "BearerAuth")
     @PostMapping()
     ResponseEntity<ApiResponse<PostResponse>> create(@RequestBody CreatePostContentDto createPostContentDto) {
-        return ResponseEntity.ok(ApiResponse.<PostResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PostResponse>builder()
                 .data(postContentService.create(createPostContentDto))
                 .build());
     }

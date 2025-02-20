@@ -33,7 +33,7 @@ public enum ErrorCode {
     E_POST_POLL_NOT_FOUND(40404,"PostPollNotFound",HttpStatus.NOT_FOUND),
     E_LANGUAGE_NOT_FOUND(40405,"LanguageNotFound",HttpStatus.NOT_FOUND),
     E_ROLE_NOT_FOUND(40406,"RoleNotFound",HttpStatus.NOT_FOUND),
-
+    E_COMMENT_NOT_FOUND(40407,"CommentNotFound",HttpStatus.NOT_FOUND),
 
 
 

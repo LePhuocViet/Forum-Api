@@ -5,6 +5,7 @@ import com.project.forum.exception.ApiResponse;
 import com.project.forum.service.IVoteService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,7 @@ public class PollVoteController {
 
     @PostMapping("/vote/{postPollId}")
     ResponseEntity<ApiResponse<PollVoteResponse>> vote(@PathVariable String postPollId) {
-        return ResponseEntity.ok(ApiResponse.<PollVoteResponse>builder()
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PollVoteResponse>builder()
                 .data(voteService.voteOption(postPollId))
                 .build());
     }

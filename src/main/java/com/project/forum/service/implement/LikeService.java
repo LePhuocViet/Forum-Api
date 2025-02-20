@@ -38,7 +38,6 @@ public class LikeService implements ILikeService {
     @Transactional
     @Override
     public LikeResponse actionLike(CreateLikeDto createLikeDto) {
-        String message = "";
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users users = usersRepository.findByUsername(username)
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
@@ -54,25 +53,22 @@ public class LikeService implements ILikeService {
                     .build();
             likesRepository.save(likes);
 
-            int likeCount = noticesRepository.countNoticesByTypeAndPost_id(TypeNotice.LIKE.toString(), posts.getId());
+            // ✅ Chủ bài viết
+            String postOwnerId = posts.getUsers().getId();
 
-            if (noticesRepository.existsNoticesByTypeAndPost_id(TypeNotice.LIKE.toString(), posts.getId())) {
-                noticesRepository.deleteNoticesByTypeAndPost_id(TypeNotice.LIKE.toString(), posts.getId());
-                return LikeResponse.builder()
-                        .liked(false)
-                        .message("UnLike Success")
-                        .build();
-            }
+            int likeCount = noticesRepository.countNoticesByTypeAndPost_id(
+                    TypeNotice.LIKE.toString(), posts.getId());
 
+            String message;
             if (posts.getType_post().equals(TypePost.CONTENT)) {
-                message = users.getName() + " and " + likeCount + " other people like your post " +
-                        posts.getPostContent().getTitle().substring(0, 12) + " ...";
+                message = users.getName() + " và " + likeCount + " người khác đã thích bài viết của bạn: " +
+                        posts.getPostContent().getTitle().substring(0, 12) + "...";
             } else {
-                message = users.getName() + " and " + likeCount + " other people like your post " +
-                        posts.getPostPoll().getQuestion().substring(0, 12) + " ...";
+                message = users.getName() + " và " + likeCount + " người khác đã thích bài viết của bạn: " +
+                        posts.getPostPoll().getQuestion().substring(0, 12) + "...";
             }
+            noticeService.sendNotification(users, TypeNotice.LIKE.toString(), message, posts.getId());
 
-            noticeService.sendNotification(users,TypeNotice.LIKE.toString(),message,posts.getId(),null);
         }
 
         return LikeResponse.builder()
@@ -80,5 +76,6 @@ public class LikeService implements ILikeService {
                 .message("Like Success")
                 .build();
     }
+
 }
 

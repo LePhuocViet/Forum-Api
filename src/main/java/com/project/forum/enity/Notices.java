@@ -26,14 +26,11 @@ public class Notices {
     String message;
 
     @CreatedDate()
-    @Column(updatable = false)
     LocalDateTime created_at;
 
     boolean status;
 
     String post_id;
-
-    String comment_id;
 
     String type;
 

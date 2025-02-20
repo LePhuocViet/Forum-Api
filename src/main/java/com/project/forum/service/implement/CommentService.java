@@ -1,0 +1,88 @@
+package com.project.forum.service.implement;
+
+import com.project.forum.dto.requests.comment.CreateCommentDto;
+import com.project.forum.dto.responses.comment.CommentResponse;
+import com.project.forum.enity.Comments;
+import com.project.forum.enity.Notices;
+import com.project.forum.enity.Posts;
+import com.project.forum.enity.Users;
+import com.project.forum.enums.ErrorCode;
+import com.project.forum.enums.TypeNotice;
+import com.project.forum.exception.WebException;
+import com.project.forum.mapper.CommentMapper;
+import com.project.forum.repository.CommentsRepository;
+import com.project.forum.repository.NoticesRepository;
+import com.project.forum.repository.PostsRepository;
+import com.project.forum.repository.UsersRepository;
+import com.project.forum.service.ICommentService;
+import com.project.forum.service.INoticeService;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+@Service
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class CommentService implements ICommentService {
+
+    CommentsRepository commentsRepository;
+
+    PostsRepository postsRepository;
+
+    UsersRepository usersRepository;
+
+    INoticeService noticeService;
+
+    NoticesRepository noticesRepository;
+
+    CommentMapper commentMapper;
+
+    @Override
+    public CommentResponse create(CreateCommentDto createCommentDto) {
+
+        String message = "";
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        Posts posts = postsRepository.findById(createCommentDto.getPostId()).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+
+        int count = noticesRepository.countNoticesByTypeAndPost_id(TypeNotice.COMMENT.toString(), posts.getId());
+
+        message += users.getName() + " and " + count + " other people comment your post " + posts.getPostPoll().getQuestion().substring(0, 12) + " ...";
+
+        Comments comments = Comments.builder()
+                .users(users)
+                .posts(posts)
+                .content(createCommentDto.getContent())
+                .build();
+
+        noticeService.sendNotification(users, TypeNotice.COMMENT.toString(), posts.getId(), message);
+
+        commentsRepository.save(comments);
+
+        return commentMapper.toCommentResponse(comments);
+    }
+
+    @Override
+    public Page<CommentResponse> findCommentByPost(Integer size, Integer page, String postId) {
+        Pageable pageable = PageRequest.of(page,size);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (username.equals("anonymousUser")) {
+            return commentsRepository.findCommentByPostIdAndUserId(postId, null,pageable);
+        }
+        Users users = usersRepository.findByUsername(username)
+                .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        Page<CommentResponse> commentResponses = commentsRepository.findCommentByPostIdAndUserId(postId, users.getId(), pageable);
+        return commentResponses;
+    }
+
+    @Override
+    public boolean deleteComment(String id) {
+        commentsRepository.deleteById(id);
+        return true;
+    }
+}

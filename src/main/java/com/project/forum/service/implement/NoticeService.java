@@ -19,20 +19,29 @@ public class NoticeService implements INoticeService {
      final SimpMessagingTemplate messagingTemplate;
      final NoticesRepository noticesRepository;
 
-    public void sendNotification(Users users, String type, String message, String postId, String commentId) {
-        Notices notice = Notices.builder()
-                .users(users)
-                .post_id(postId)
-                .comment_id(commentId)
-                .type(type)
-                .message(message)
-                .status(false)
-                .build();
+    public void sendNotification(Users users, String type, String message, String postId) {
 
-        noticesRepository.save(notice);
+        if (noticesRepository.existsNoticesByTypeAndPost_idAndUser_id(type, postId, users.getId())) {
+            noticesRepository.updateNoticeMessage(type,postId,users.getId(),message);
+            String destination = "/user/" + users.getId() + "/queue/notifications";
+            messagingTemplate.convertAndSend(destination, message);
+        } else {
+            Notices notice = Notices.builder()
+                    .users(users)
+                    .post_id(postId)
+                    .type(type)
+                    .message(message)
+                    .status(false)
+                    .build();
+            noticesRepository.save(notice);
 
-        String destination = "/user/" + users.getId() + "/queue/notifications";
-        messagingTemplate.convertAndSend(destination, notice);
+            String destination = "/user/" + users.getId() + "/queue/notifications";
+            messagingTemplate.convertAndSend(destination, notice.getMessage());
+        }
+
+
+
+
     }
 
 }
