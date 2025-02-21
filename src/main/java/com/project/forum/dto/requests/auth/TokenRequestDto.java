@@ -11,4 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class TokenRequestDto {
 
     String token;
+
 }
