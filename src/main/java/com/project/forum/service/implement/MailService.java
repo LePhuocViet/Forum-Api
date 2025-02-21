@@ -125,7 +125,7 @@ public class MailService implements IMailService {
         simpleMailMessage.setFrom("vietyts2003@gmail.com");
         simpleMailMessage.setText("Please click on the following link to verify your email.\n" +
                 "Link is only valid for 5 minutes \n" +
-                mail_url + "/confirmEmail?token=" + token);
+                mail_url + "/resetPassword?token=" + token);
         if (iCacheService.existData("user:" + users.getUsername() + "mail_password")) {
             iCacheService.deleteData("user:" + users.getUsername() + "mail_password");
         }
