@@ -49,7 +49,7 @@ public class MailService implements IMailService {
     @Value("${SECRET_KEY}")
     String secret_key;
 
-    @Value("")
+    @Value("http://localhost:1407")
     String mail_url;
 
     @Override
