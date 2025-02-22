@@ -58,7 +58,7 @@ public class PostController {
                 .data(postService.findPostByIdUser(id,page, size))
                 .build());
     }
-
+    @SecurityRequirement(name = "BearerAuth")
     @DeleteMapping("{id}")
     ResponseEntity<ApiResponse<Boolean>> delete(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.<Boolean>builder()

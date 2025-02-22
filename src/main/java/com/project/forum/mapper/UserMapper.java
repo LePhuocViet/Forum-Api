@@ -13,8 +13,7 @@ public interface UserMapper {
 
     Users toUsers(CreateUserDto createUserDto);
 
-    @Mapping(target = "name",  source = "name")
-
+    @Mapping(target = "name", source = "name")
     UserResponse toUserResponse(Users users);
 
     Users toUpdate(@MappingTarget Users users, UpdateUserDto updateUserDto);

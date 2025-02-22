@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface PostsRepository extends JpaRepository<Posts, String> {
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostResponse(" +
-            "p.id, p.type_post, p.created_at, p.updated_at, u.username, " +
+            "p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, lg.name, " +
             " (CASE WHEN p.users.id = :userId THEN true ELSE false END) , FALSE , COUNT(DISTINCT l.id) , COUNT(DISTINCT c.id)) " +
             "FROM posts p " +
             "LEFT JOIN p.users u " +
@@ -37,7 +37,7 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
                                     Pageable pageable);
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostResponse(" +
-            "p.id, p.type_post, p.created_at, p.updated_at, u.username, " +
+            "p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, lg.name,  " +
             " (CASE WHEN p.users.id = :userId THEN true ELSE false END) , FALSE , COUNT(DISTINCT l.id) , COUNT(DISTINCT c.id)) " +
             "FROM posts p " +
             "LEFT JOIN p.users u " +
@@ -53,12 +53,13 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
 
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostResponse( " +
-            "p.id, p.type_post, p.created_at, p.updated_at, u.username, " +
+            "p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, lg.name,  " +
             "(CASE WHEN p.users.id = :userId THEN true ELSE false END) , FALSE , COUNT(DISTINCT l.id) , COUNT(DISTINCT c.id)) " +
             "FROM posts p " +
             "LEFT JOIN p.users u " +
             "LEFT JOIN p.comments c " +
             "LEFT JOIN p.likes l " +
+            "LEFT JOIN p.language lg " +
             "WHERE p.id = :id " +
             "GROUP BY p.id, p.type_post, p.created_at, p.updated_at, u.username, p.users.id")
     Optional<PostResponse> findPostById(@Param("id") String id, @Param("userId") String userId);

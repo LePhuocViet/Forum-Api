@@ -17,7 +17,7 @@ public class PostPollResponse {
     String id;
     String question;
     List<PollOptionResponse> pollOptions;
-    TypePost typePost;
+    String typePost;
     Boolean isVoted;
 
 

@@ -1,11 +1,14 @@
 package com.project.forum.configuration;
 
+import com.project.forum.enity.Language;
 import com.project.forum.enity.Roles;
 import com.project.forum.enity.Users;
 import com.project.forum.enums.ErrorCode;
+import com.project.forum.enums.LanguageCode;
 import com.project.forum.enums.RolesCode;
 import com.project.forum.enums.StatusUser;
 import com.project.forum.exception.WebException;
+import com.project.forum.repository.LanguageRepository;
 import com.project.forum.repository.RolesRepository;
 import com.project.forum.repository.UsersRepository;
 import lombok.AllArgsConstructor;
@@ -30,7 +33,7 @@ public class StartUpRunner {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
     private final RolesRepository rolesRepository;
-
+    private final LanguageRepository languageRepository;
     @Bean
     ApplicationRunner createRoles() {
         return args -> {
@@ -103,4 +106,18 @@ public class StartUpRunner {
     }
 
 
+    @Bean
+    ApplicationRunner createLanguage() {
+        return args -> {
+        if (languageRepository.findByName(LanguageCode.ENGLISH.getName()).isEmpty()) {
+            languageRepository.save(new Language(LanguageCode.ENGLISH.getName(),LanguageCode.ENGLISH.getName()));
+        }
+        if (languageRepository.findByName(LanguageCode.CHINA.getName()).isEmpty()){
+            languageRepository.save(new Language(LanguageCode.CHINA.getName(),LanguageCode.CHINA.getName()));
+        }
+        if (languageRepository.findByName(LanguageCode.JAPAN.getName()).isEmpty()){
+            languageRepository.save(new Language(LanguageCode.JAPAN.getName(),LanguageCode.JAPAN.getName()));
+        }
+        };
+    }
 }

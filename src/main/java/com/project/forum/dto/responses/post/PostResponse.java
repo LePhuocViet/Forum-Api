@@ -17,13 +17,17 @@ public class PostResponse {
 
     String id;
 
-    TypePost type_post;
+    String type_post;
 
     LocalDateTime created_at;
 
     LocalDateTime updated_at;
 
     String user_name;
+
+    String user_avatar;
+
+    String language;
 
     boolean user_post;
 
@@ -32,5 +36,6 @@ public class PostResponse {
     Long like;
 
     Long comment;
+
 
 }

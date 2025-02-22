@@ -18,7 +18,7 @@ public interface UsersRepository extends JpaRepository<Users, String> {
 
       boolean existsByEmail(String email);
 
-    @Query("SELECT NEW com.project.forum.dto.responses.user.UserResponse(u.name, u.language, u.gender, u.img, u.email, u.username) " +
+    @Query("SELECT NEW com.project.forum.dto.responses.user.UserResponse(u.id,u.name, u.language, u.gender, u.img, u.email, u.username) " +
             "FROM users u")
     Page<UserResponse> getAllUsers(Pageable pageable);
 
