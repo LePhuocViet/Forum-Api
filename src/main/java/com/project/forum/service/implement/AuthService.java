@@ -122,14 +122,14 @@ public class AuthService implements IAuthService {
             String username = signedJWT.getJWTClaimsSet().getSubject();
             Users users = usersRepository.findByUsername(username)
                     .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-            if (!users.getStatus().equals(StatusUser.ACTIVE)){
+            if (users.getStatus().equals(StatusUser.ACTIVE.toString())){
                 return AuthResponse.builder()
-                        .authorized(false)
+                        .authorized(true)
                         .token(token)
                         .build();
             } else {
                 return AuthResponse.builder()
-                        .authorized(true)
+                        .authorized(false)
                         .token(token)
                         .build();
             }

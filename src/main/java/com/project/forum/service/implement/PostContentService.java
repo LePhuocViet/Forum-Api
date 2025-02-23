@@ -22,6 +22,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -51,6 +54,8 @@ public class PostContentService implements IPostContentService {
                 .language(language)
                 .type_post(TypePost.CONTENT.toString())
                 .users(user)
+                .updated_at(LocalDateTime.now())
+                .created_at(LocalDateTime.now())
                 .build();
         postsRepository.save(posts);
         PostContent postContent = PostContent.builder()

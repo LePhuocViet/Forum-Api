@@ -5,6 +5,7 @@ import com.project.forum.dto.responses.post.PostPollResponse;
 import com.project.forum.dto.responses.post.PostResponse;
 import com.project.forum.exception.ApiResponse;
 import com.project.forum.service.IPostPollService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class PostPollController {
                 .build());
     }
 
+    @SecurityRequirement(name = "BearerAuth")
     @PostMapping()
     ResponseEntity<ApiResponse<PostResponse>> create(@RequestBody CreatePostPollDto createPostPollDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PostResponse>builder()

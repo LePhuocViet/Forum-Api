@@ -18,6 +18,7 @@ public class PostController {
 
     IPostService postService;
 
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping()
     ResponseEntity<ApiResponse<Page<PostResponse>>> findAll(@RequestParam(defaultValue = "0") Integer page,
                                                             @RequestParam(defaultValue = "10") Integer size,
@@ -28,7 +29,7 @@ public class PostController {
                 .build());
     }
 
-
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping("{id}")
     ResponseEntity<ApiResponse<PostResponse>> findById(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.<PostResponse>builder()
