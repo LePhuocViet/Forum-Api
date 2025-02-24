@@ -7,6 +7,7 @@ import com.project.forum.enity.Notices;
 import com.project.forum.enity.Posts;
 import com.project.forum.enity.Users;
 import com.project.forum.enums.ErrorCode;
+import com.project.forum.enums.RolesCode;
 import com.project.forum.enums.TypeNotice;
 import com.project.forum.exception.WebException;
 import com.project.forum.mapper.CommentMapper;
@@ -82,7 +83,13 @@ public class CommentService implements ICommentService {
 
     @Override
     public boolean deleteComment(String id) {
-        commentsRepository.deleteById(id);
-        return true;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        Comments comments = commentsRepository.findById(id).orElseThrow(() -> new WebException(ErrorCode.E_COMMENT_NOT_FOUND));
+        if (comments.getUsers().getId().equals(users.getId()) || users.getRoles().equals(RolesCode.ADMIN) || users.getRoles().equals(RolesCode.EMPLOYEE)) {
+            commentsRepository.delete(comments);
+            return true;
+        } else return false;
+
     }
 }

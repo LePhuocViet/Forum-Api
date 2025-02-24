@@ -19,6 +19,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,6 +72,7 @@ public class PostPollService implements IPostPollService {
                 .users(users)
                 .type_post(TypePost.POLL.toString())
                 .language(language)
+                .created_at(LocalDateTime.now())
                 .build();
         posts = postsRepository.save(posts);
 

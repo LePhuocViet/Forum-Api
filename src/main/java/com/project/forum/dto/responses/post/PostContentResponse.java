@@ -22,4 +22,5 @@ public class PostContentResponse {
 
     String img_url;
 
+    String postId;
 }

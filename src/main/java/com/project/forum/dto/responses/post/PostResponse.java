@@ -27,6 +27,8 @@ public class PostResponse {
 
     String user_avatar;
 
+    String user_id;
+
     String language;
 
     boolean user_post;

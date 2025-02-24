@@ -1,7 +1,6 @@
 package com.project.forum.repository;
 
 import com.project.forum.dto.responses.post.PollOptionResponse;
-import com.project.forum.dto.responses.post.PostPollResponse;
 import com.project.forum.enity.PollOptions;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

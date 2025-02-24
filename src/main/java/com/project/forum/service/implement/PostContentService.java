@@ -62,6 +62,7 @@ public class PostContentService implements IPostContentService {
                 .content(createPostContentDto.getContent())
                 .title(createPostContentDto.getTitle())
                 .img_url(createPostContentDto.getImg_url())
+                .posts(posts)
                 .build();
         postContentRepository.save(postContent);
 

@@ -1,8 +1,11 @@
 package com.project.forum.service.implement;
 
 import com.project.forum.dto.responses.post.PostResponse;
+import com.project.forum.enity.Comments;
+import com.project.forum.enity.Posts;
 import com.project.forum.enity.Users;
 import com.project.forum.enums.ErrorCode;
+import com.project.forum.enums.RolesCode;
 import com.project.forum.exception.WebException;
 import com.project.forum.repository.*;
 import com.project.forum.service.IPostService;
@@ -43,12 +46,12 @@ public class PostService implements IPostService {
         Users users = usersRepository.findByUsername(username)
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Page<PostResponse> postPageResponseList = postsRepository.findAllPosts(content, users.getId().toString(), language, pageable);
-        for (PostResponse post : postPageResponseList){
-            if (likesRepository.existsByPosts_IdAndUsers_Id(post.getId(), users.getId())){
+        for (PostResponse post : postPageResponseList) {
+            if (likesRepository.existsByPosts_IdAndUsers_Id(post.getId(), users.getId())) {
                 post.setUser_like(true);
             }
         }
-        return  postPageResponseList;
+        return postPageResponseList;
     }
 
     @Override
@@ -69,7 +72,14 @@ public class PostService implements IPostService {
 
     @Override
     public boolean deletePostById(String id) {
-        return postsRepository.deletePostById(id);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        Posts posts = postsRepository.findById(id).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+        if (posts.getUsers().getId().equals(users.getId()) || users.getRoles().equals(RolesCode.ADMIN) || users.getRoles().equals(RolesCode.EMPLOYEE)) {
+            postsRepository.delete(posts);
+            return true;
+        } else
+            return false;
     }
 
     @Override
@@ -79,8 +89,8 @@ public class PostService implements IPostService {
         Users users = usersRepository.findByUsername(username)
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Page<PostResponse> postPageResponseList = postsRepository.userPost(users.getId().toString(), pageable);
-        for (PostResponse post : postPageResponseList){
-            if (likesRepository.existsByPosts_IdAndUsers_Id(post.getId(), users.getId())){
+        for (PostResponse post : postPageResponseList) {
+            if (likesRepository.existsByPosts_IdAndUsers_Id(post.getId(), users.getId())) {
                 post.setUser_like(true);
             }
         }
@@ -94,8 +104,8 @@ public class PostService implements IPostService {
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
 
         Page<PostResponse> postPageResponseList = postsRepository.userPost(users.getId().toString(), pageable);
-        for (PostResponse post : postPageResponseList){
-            if (likesRepository.existsByPosts_IdAndUsers_Id(post.getId(), users.getId())){
+        for (PostResponse post : postPageResponseList) {
+            if (likesRepository.existsByPosts_IdAndUsers_Id(post.getId(), users.getId())) {
                 post.setUser_like(true);
             }
         }

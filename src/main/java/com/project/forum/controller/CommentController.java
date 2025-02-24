@@ -4,6 +4,7 @@ import com.project.forum.dto.requests.comment.CreateCommentDto;
 import com.project.forum.dto.responses.comment.CommentResponse;
 import com.project.forum.exception.ApiResponse;
 import com.project.forum.service.ICommentService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +22,7 @@ public class CommentController {
 
     ICommentService commentService;
 
+    @SecurityRequirement(name = "BearerAuth")
     @PostMapping()
     ResponseEntity<ApiResponse<CommentResponse>> create(@RequestBody() CreateCommentDto createCommentDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<CommentResponse>builder()
@@ -36,7 +38,7 @@ public class CommentController {
                 .data(commentService.findCommentByPost(size, page, postId))
                 .build());
     }
-
+    @SecurityRequirement(name = "BearerAuth")
     @DeleteMapping("/{id}")
     ResponseEntity<ApiResponse<Boolean>> delete(@PathVariable String id) {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

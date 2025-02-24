@@ -9,11 +9,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostPollRepository extends JpaRepository<PostPoll, String> {
+
+
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostPollResponse( " +
-            "pp.id, pp.question,null, p.type_post) " +
+            "pp.id, pp.question, p.type_post, false ,pp.posts.id) " +
             "FROM post_poll pp " +
             "JOIN pp.posts p " +
             "WHERE pp.posts.id = :postId")
     PostPollResponse getPostPollByPostId(@Param("postId") String postId);
+
 
 }
