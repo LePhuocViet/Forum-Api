@@ -46,7 +46,6 @@ public class CommentReplyService implements ICommentReplyService {
         Comments parentComment = commentsRepository.findById(createCommentReplyDto.getCommentId())
                 .orElseThrow(() -> new WebException(ErrorCode.E_COMMENT_NOT_FOUND));
 
-        // Tạo phản hồi (reply) cho bình luận
         CommentReply commentReply = CommentReply.builder()
                 .users(users)
                 .comments(parentComment)
@@ -62,7 +61,7 @@ public class CommentReplyService implements ICommentReplyService {
 
 
 
-            noticeService.sendNotification(users, TypeNotice.COMMENT_REPLY.toString(), parentComment.getId(), message);
+        noticeService.sendNotification(users, TypeNotice.COMMENT_REPLY.toString(), parentComment.getId(), message);
 
 
         return CommentResponse.builder()
