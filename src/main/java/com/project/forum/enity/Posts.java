@@ -36,7 +36,7 @@ public class Posts {
     LocalDateTime updated_at;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     Users users;
 
@@ -46,18 +46,18 @@ public class Posts {
     Language language;
 
 
-    @OneToMany(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "posts",orphanRemoval = true)
     List<Likes> likes;
 
-    @OneToMany(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "posts",orphanRemoval = true)
     List<Comments> comments;
 
-    @OneToMany(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "posts",orphanRemoval = true)
     List<Advertisement> advertisements;
 
-    @OneToOne(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "posts",orphanRemoval = true)
     private PostPoll postPoll;
 
-    @OneToOne(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "posts",orphanRemoval = true)
     private PostContent postContent;
 }

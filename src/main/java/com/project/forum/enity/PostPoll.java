@@ -31,7 +31,7 @@ public class PostPoll {
     @JoinColumn(name = "post_id")
     Posts posts;
 
-    @OneToMany(mappedBy = "postPoll",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "postPoll")
     List<PollOptions> pollOptions;
 
 }

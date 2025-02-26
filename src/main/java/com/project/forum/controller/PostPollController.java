@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostPollController {
     IPostPollService postPollService;
 
-
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/{postId}")
     ResponseEntity<ApiResponse<PostPollResponse>> getById(@PathVariable String postId) {
         return ResponseEntity.ok(ApiResponse.<PostPollResponse>builder()

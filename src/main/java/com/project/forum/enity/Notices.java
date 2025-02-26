@@ -34,7 +34,7 @@ public class Notices {
 
     String type;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     Users users;
 }

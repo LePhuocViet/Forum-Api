@@ -30,11 +30,11 @@ public class CommentReply {
     @Column(updatable = false)
     LocalDateTime created_at;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     Users users;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "comment_id")
     Comments comments;
 

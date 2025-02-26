@@ -3,7 +3,6 @@ package com.project.forum.service.implement;
 import com.project.forum.dto.requests.like.CreateLikeDto;
 import com.project.forum.dto.responses.like.LikeResponse;
 import com.project.forum.enity.Likes;
-import com.project.forum.enity.Notices;
 import com.project.forum.enity.Posts;
 import com.project.forum.enity.Users;
 import com.project.forum.enums.ErrorCode;
@@ -19,10 +18,11 @@ import com.project.forum.service.INoticeService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -50,25 +50,29 @@ public class LikeService implements ILikeService {
             Likes likes = Likes.builder()
                     .users(users)
                     .posts(posts)
+                    .created_at(LocalDateTime.now())
                     .build();
             likesRepository.save(likes);
 
-            // ✅ Chủ bài viết
             String postOwnerId = posts.getUsers().getId();
 
             int likeCount = noticesRepository.countNoticesByTypeAndPost_id(
                     TypeNotice.LIKE.toString(), posts.getId());
 
-            String message;
+            String message = "";
             if (posts.getType_post().equals(TypePost.CONTENT)) {
-                message = users.getName() + " và " + likeCount + " người khác đã thích bài viết của bạn: " +
-                        posts.getPostContent().getTitle().substring(0, 12) + "...";
-            } else {
-                message = users.getName() + " và " + likeCount + " người khác đã thích bài viết của bạn: " +
-                        posts.getPostPoll().getQuestion().substring(0, 12) + "...";
-            }
-            noticeService.sendNotification(users, TypeNotice.LIKE.toString(), message, posts.getId());
+                String title = posts.getPostContent().getTitle();
+                String safeTitle = title.length() > 12 ? title.substring(0, 12) + "..." : title;
 
+                message = users.getName() + " and " + likeCount + " other people like your post " + safeTitle;
+            } else {
+                String question = posts.getPostPoll().getQuestion();
+                String safeQuestion = question.length() > 12 ? question.substring(0, 12) + "..." : question;
+
+                message = users.getName() + " and " + likeCount + " other people like your post " + safeQuestion;
+            }
+
+            noticeService.sendNotification(users, TypeNotice.LIKE.toString(), postOwnerId, message);
         }
 
         return LikeResponse.builder()

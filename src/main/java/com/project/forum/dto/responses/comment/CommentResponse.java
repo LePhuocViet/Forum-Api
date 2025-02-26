@@ -27,4 +27,6 @@ public class CommentResponse {
     String user_name;
 
     boolean is_user;
+
+    boolean is_reply;
 }

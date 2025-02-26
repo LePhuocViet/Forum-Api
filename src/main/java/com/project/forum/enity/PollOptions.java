@@ -30,6 +30,6 @@ public class PollOptions {
     @JoinColumn(name = "poll_id")
     PostPoll postPoll;
 
-    @OneToMany(mappedBy = "poll_options",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "poll_options")
     List<PollVote> pollVotes;
 }

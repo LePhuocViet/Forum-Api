@@ -74,7 +74,7 @@ public class PostPollService implements IPostPollService {
                 .language(language)
                 .created_at(LocalDateTime.now())
                 .build();
-        posts = postsRepository.save(posts);
+        posts = postsRepository.saveAndFlush(posts);
 
         PostPoll postPoll = PostPoll.builder()
                 .posts(posts)
@@ -82,20 +82,21 @@ public class PostPollService implements IPostPollService {
                 .question(createPostPollDto.getQuestion())
                 .pollOptions(new ArrayList<>())
                 .build();
+        postPoll = postPollRepository.saveAndFlush(postPoll);
 
         List<PollOptions> pollOptions = new ArrayList<>();
         for (CreateOptionDto optionDto : createPostPollDto.getCreateOptionDtoList()) {
             PollOptions pollOption = creatPollOption(optionDto.getOption_text(), postPoll);
             pollOptions.add(pollOption);
         }
-
         postPoll.setPollOptions(pollOptions);
         postPollRepository.save(postPoll);
 
+        PostResponse response = postMapper.toPostsResponse(posts);
+        response.setUser_post(true);
+        return response;
 
-        return postMapper.toPostsResponse(posts);
     }
-
 
     PollOptions creatPollOption(String option_text, PostPoll postPoll) {
         PollOptions pollOptions = PollOptions.builder()

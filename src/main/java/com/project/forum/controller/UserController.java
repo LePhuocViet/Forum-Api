@@ -55,6 +55,7 @@ public class UserController {
                 .build());
     }
 
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/{id}")
     ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable("id") String id) {
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()

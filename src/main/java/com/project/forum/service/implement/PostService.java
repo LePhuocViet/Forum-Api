@@ -46,7 +46,7 @@ public class PostService implements IPostService {
         }
         Users users = usersRepository.findByUsername(username)
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        Page<PostResponse> postPageResponseList = postsRepository.findAllPosts(content, users.getId().toString(), language, pageable);
+        Page<PostResponse> postPageResponseList = postsRepository.findAllPosts(content, users.getId(), language, pageable);
         for (PostResponse post : postPageResponseList) {
             if (likesRepository.existsByPosts_IdAndUsers_Id(post.getId(), users.getId())) {
                 post.setUser_like(true);

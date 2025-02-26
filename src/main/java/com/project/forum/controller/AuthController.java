@@ -2,13 +2,17 @@ package com.project.forum.controller;
 
 import com.project.forum.dto.requests.auth.AuthRequestDto;
 import com.project.forum.dto.requests.auth.TokenRequestDto;
+import com.project.forum.dto.requests.user.CreateUserDto;
 import com.project.forum.dto.responses.auth.AuthResponse;
 import com.project.forum.dto.responses.auth.IntrospectResponse;
+import com.project.forum.dto.responses.user.UserResponse;
 import com.project.forum.exception.ApiResponse;
 import com.project.forum.service.IAuthService;
+import com.project.forum.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     IAuthService authService;
+    IUserService userService;
+
+    @PostMapping("/register")
+    ResponseEntity<ApiResponse<UserResponse>> create(@RequestBody(required = true) CreateUserDto createUserDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserResponse>builder()
+                .data(userService.create(createUserDto))
+                .build());
+    }
 
     @PostMapping("/login")
     @Operation(summary = "Login")

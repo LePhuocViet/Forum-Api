@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class PostContentController {
     IPostContentService postContentService;
 
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping("/{postId}")
     ResponseEntity<ApiResponse<PostContentResponse>> getById(@PathVariable String postId) {
         return ResponseEntity.ok(ApiResponse.<PostContentResponse>builder()

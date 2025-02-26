@@ -26,6 +26,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -52,20 +55,31 @@ public class CommentService implements ICommentService {
         Posts posts = postsRepository.findById(createCommentDto.getPostId()).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
 
         int count = noticesRepository.countNoticesByTypeAndPost_id(TypeNotice.COMMENT.toString(), posts.getId());
+        if (Objects.isNull(posts.getPostPoll())) {
+            String title = posts.getPostContent().getTitle();
+            String safeTitle = title.substring(0, Math.min(title.length(), 12));
+            message += users.getName() + " and " + count + " other people comment your post " + safeTitle + " ...";
+        } else {
+            String question = posts.getPostPoll().getQuestion();
+            String safeQuestion = question.substring(0, Math.min(question.length(), 12));
+            message += users.getName() + " and " + count + " other people comment your post " + safeQuestion + " ...";
+        }
 
-        message += users.getName() + " and " + count + " other people comment your post " + posts.getPostPoll().getQuestion().substring(0, 12) + " ...";
 
         Comments comments = Comments.builder()
                 .users(users)
                 .posts(posts)
                 .content(createCommentDto.getContent())
+                .created_at(LocalDateTime.now())
                 .build();
 
         noticeService.sendNotification(users, TypeNotice.COMMENT.toString(), posts.getId(), message);
 
         commentsRepository.save(comments);
-
-        return commentMapper.toCommentResponse(comments);
+        CommentResponse commentResponse = commentMapper.toCommentResponse(comments);
+        commentResponse.set_user(true);
+        commentResponse.setCreated_at(LocalDateTime.now());
+        return commentResponse;
     }
 
     @Override
@@ -78,6 +92,7 @@ public class CommentService implements ICommentService {
         Users users = usersRepository.findByUsername(username)
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Page<CommentResponse> commentResponses = commentsRepository.findCommentByPostIdAndUserId(postId, users.getId(), pageable);
+
         return commentResponses;
     }
 

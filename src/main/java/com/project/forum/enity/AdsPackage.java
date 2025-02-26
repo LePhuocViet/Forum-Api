@@ -37,6 +37,6 @@ public class AdsPackage {
     @Column(updatable = false)
     LocalDateTime created;
 
-    @OneToMany(mappedBy = "adsPackage",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "adsPackage")
     List<Advertisement> advertisements;
 }

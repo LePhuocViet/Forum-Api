@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class NoticeService implements INoticeService {
      final SimpMessagingTemplate messagingTemplate;
      final NoticesRepository noticesRepository;
 
+     @Transactional
     public void sendNotification(Users users, String type, String message, String postId) {
 
         if (noticesRepository.existsNoticesByTypeAndPost_idAndUser_id(type, postId, users.getId())) {

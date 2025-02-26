@@ -8,8 +8,9 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
-    @Mapping(target = "user_name", ignore = true)
-    @Mapping(target = "user_img", ignore = true)
+    @Mapping(target = "user_name", source = "users.name")
+    @Mapping(target = "user_img", source = "users.img")
     @Mapping(target = "is_user", ignore = true)
+    @Mapping(target = "is_reply", ignore = true)
     CommentResponse toCommentResponse(Comments comments);
 }

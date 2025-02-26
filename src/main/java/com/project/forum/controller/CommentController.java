@@ -29,7 +29,7 @@ public class CommentController {
                 .data(commentService.create(createCommentDto))
                 .build());
     }
-
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping
     ResponseEntity<ApiResponse<Page<CommentResponse>>> getAll(@RequestParam(defaultValue = "0") Integer page,
                                                               @RequestParam(defaultValue = "10") Integer size,

@@ -18,7 +18,8 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostResponse(" +
             "p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, u.id, lg.name, " +
-            " (CASE WHEN p.users.id = :userId THEN true ELSE false END) , FALSE , COUNT(DISTINCT l.id) , COUNT(DISTINCT c.id)) " +
+            "(CASE WHEN u.id = :userId THEN true ELSE false END) , FALSE , " +
+            "COUNT(DISTINCT l.id) , COUNT(DISTINCT c.id)) " +
             "FROM posts p " +
             "LEFT JOIN p.users u " +
             "LEFT JOIN p.comments c " +
@@ -31,11 +32,12 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
             "OR pc.title LIKE %:content% " +
             "OR pp.question LIKE %:content%) " +
             "AND (:language IS NULL OR :language = '' OR lg.name = :language) " +
-            "GROUP BY p.id, p.type_post, p.created_at, p.updated_at, u.username, p.users.id")
+            "GROUP BY p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, u.id, lg.name, u.id")
     Page<PostResponse> findAllPosts(@Param("content") String content,
                                     @Param("userId") String userId,
                                     @Param("language") String language,
                                     Pageable pageable);
+
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostResponse(" +
             "p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, u.id, lg.name,  " +

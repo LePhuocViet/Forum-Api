@@ -45,7 +45,7 @@ public class Payment {
 
     String payable_type;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     Users users;
 

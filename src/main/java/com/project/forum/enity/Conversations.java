@@ -36,6 +36,6 @@ public class Conversations {
     )
     List<Users> participants;
 
-    @OneToMany(mappedBy = "conversations", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "conversations")
     List<Messages> messages;
 }
