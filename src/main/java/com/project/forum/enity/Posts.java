@@ -28,33 +28,36 @@ public class Posts {
 
     String type_post;
 
-    @CreatedDate()
+    @CreatedDate
     @Column(updatable = false)
     LocalDateTime created_at;
 
-    @UpdateTimestamp()
+    @UpdateTimestamp
     LocalDateTime updated_at;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     Users users;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id")
     Language language;
 
-    @OneToMany(mappedBy = "posts",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Likes> likes;
 
-    @OneToMany(mappedBy = "posts",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Comments> comments;
 
-    @OneToMany(mappedBy = "posts",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     List<Advertisement> advertisements;
 
-    @OneToOne(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private PostPoll postPoll;
 
-    @OneToOne(mappedBy = "posts", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "posts",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private PostContent postContent;
 }

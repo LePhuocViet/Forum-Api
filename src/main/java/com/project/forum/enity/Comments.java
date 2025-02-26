@@ -30,14 +30,14 @@ public class Comments {
     @Column(updatable = false)
     LocalDateTime created_at;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     Users users;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     Posts posts;
 
-    @OneToMany(mappedBy = "comments", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "comments", cascade = CascadeType.ALL, orphanRemoval = true)
     List<CommentReply> commentReplies;
 }

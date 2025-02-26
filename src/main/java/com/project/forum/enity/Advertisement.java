@@ -32,11 +32,11 @@ public class Advertisement {
     @Column(updatable = false)
     LocalDateTime created_at;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "post_id")
     Posts posts;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ads_package_id")
     AdsPackage adsPackage;
 

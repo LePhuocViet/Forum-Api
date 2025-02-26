@@ -26,11 +26,11 @@ public class PollVote {
     @Column(updatable = false)
     LocalDateTime created_at;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "poll_options_id")
     PollOptions poll_options;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     Users users;
 }

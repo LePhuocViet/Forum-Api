@@ -3,6 +3,7 @@ package com.project.forum.controller;
 import com.project.forum.dto.responses.vote.PollVoteResponse;
 import com.project.forum.exception.ApiResponse;
 import com.project.forum.service.IVoteService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class PollVoteController {
 
     IVoteService voteService;
 
-
+    @SecurityRequirement(name = "BearerAuth")
     @PostMapping("/vote/{postPollId}")
     ResponseEntity<ApiResponse<PollVoteResponse>> vote(@PathVariable String postPollId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PollVoteResponse>builder()

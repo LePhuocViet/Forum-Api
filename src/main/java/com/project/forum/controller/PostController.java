@@ -60,7 +60,7 @@ public class PostController {
                 .build());
     }
     @SecurityRequirement(name = "BearerAuth")
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<ApiResponse<Boolean>> delete(@PathVariable String id) {
         return ResponseEntity.ok(ApiResponse.<Boolean>builder()
                 .data(postService.deletePostById(id))

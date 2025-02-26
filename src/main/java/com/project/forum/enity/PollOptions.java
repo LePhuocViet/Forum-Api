@@ -26,10 +26,10 @@ public class PollOptions {
 
 
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "poll_id")
     PostPoll postPoll;
 
-    @OneToMany(mappedBy = "poll_options",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "poll_options",cascade = CascadeType.ALL,orphanRemoval = true)
     List<PollVote> pollVotes;
 }

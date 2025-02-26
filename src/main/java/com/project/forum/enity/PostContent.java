@@ -26,7 +26,7 @@ public class PostContent {
 
     String img_url;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "post_id")
     Posts posts;
 

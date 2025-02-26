@@ -27,11 +27,11 @@ public class PostPoll {
 
     String typePoll;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "post_id")
     Posts posts;
 
-    @OneToMany(mappedBy = "postPoll",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "postPoll",fetch = FetchType.LAZY,cascade = CascadeType.ALL,orphanRemoval = true)
     List<PollOptions> pollOptions;
 
 }

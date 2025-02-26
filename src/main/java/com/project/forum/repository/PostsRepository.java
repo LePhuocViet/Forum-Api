@@ -5,6 +5,7 @@ import com.project.forum.enity.Posts;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -65,6 +66,8 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
     Optional<PostResponse> findPostById(@Param("id") String id, @Param("userId") String userId);
 
 
+    @Modifying
+    @Query("DELETE FROM posts p WHERE p.id = :id")
+    void deletePostById(@Param("id") String id);
 
-    boolean deletePostById(String id);
 }
