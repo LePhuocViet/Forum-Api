@@ -1,5 +1,6 @@
 package com.project.forum.service.implement;
 
+import com.project.forum.dto.requests.vote.CreateVoteMultipleDto;
 import com.project.forum.dto.responses.vote.PollVoteResponse;
 import com.project.forum.enity.*;
 import com.project.forum.enums.ErrorCode;
@@ -73,6 +74,28 @@ public class VoteService implements IVoteService {
                     .message("Vote successful")
                     .build();
         }
+
+
+    }
+
+    @Override
+    @Transactional
+    public PollVoteResponse voteOptionMultiple(CreateVoteMultipleDto createVoteMultipleDto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        for (int i = 0; i < createVoteMultipleDto.getPollOptionId().size();i++ ){
+            PollOptions pollOptions = pollOptionsRepository.findById(createVoteMultipleDto.getPollOptionId().get(i)).orElseThrow(() -> new WebException(ErrorCode.E_POLL_OPTION_NOT_FOUND));
+            PollVote newPollOptions = PollVote.builder()
+                    .poll_options(pollOptions)
+                    .created_at(LocalDateTime.now())
+                    .users(users)
+                    .build();
+            pollVoteRepository.save(newPollOptions);
+        }
+        return PollVoteResponse.builder()
+                .voted(true)
+                .message("Vote successful")
+                .build();
 
 
     }

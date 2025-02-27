@@ -19,14 +19,15 @@ public class PostPollResponse {
     String question;
     List<PollOptionResponse> pollOptions;
     String typePost;
+    String typePoll;
     String postId;
     Boolean isVoted;
 
-    // Constructor tùy chỉnh để Hibernate có thể sử dụng
-    public PostPollResponse(String id, String question, String typePost, Boolean isVoted,String postId) {
+
+    public PostPollResponse(String id, String question, String typePost, String typePoll,Boolean isVoted,String postId) {
         this.id = id;
         this.question = question;
-        this.pollOptions = new ArrayList<>(); // Tránh null
+        this.pollOptions = new ArrayList<>();
         this.typePost = typePost;
         this.isVoted = isVoted;
         this.postId = postId;

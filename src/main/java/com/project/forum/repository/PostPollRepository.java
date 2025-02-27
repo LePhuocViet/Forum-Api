@@ -12,7 +12,7 @@ public interface PostPollRepository extends JpaRepository<PostPoll, String> {
 
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostPollResponse( " +
-            "pp.id, pp.question, p.type_post, false ,pp.posts.id) " +
+            "pp.id, pp.question, p.type_post,pp.typePoll, false ,pp.posts.id) " +
             "FROM post_poll pp " +
             "JOIN pp.posts p " +
             "WHERE pp.posts.id = :postId")
