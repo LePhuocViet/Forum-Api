@@ -46,6 +46,10 @@ public class LikeService implements ILikeService {
 
         if (likesRepository.existsByPosts_IdAndUsers_Id(posts.getId(), users.getId())) {
             likesRepository.deleteByPosts_IdAndUsers_Id(posts.getId(), users.getId());
+            return LikeResponse.builder()
+                    .liked(false)
+                    .message("UnLike Success")
+                    .build();
         } else {
             Likes likes = Likes.builder()
                     .users(users)
@@ -60,16 +64,15 @@ public class LikeService implements ILikeService {
                     TypeNotice.LIKE.toString(), posts.getId());
 
             String message = "";
-            if (posts.getType_post().equals(TypePost.CONTENT)) {
+            if (posts.getType_post().equals(TypePost.CONTENT.toString())) {
                 String title = posts.getPostContent().getTitle();
-                String safeTitle = title.length() > 12 ? title.substring(0, 12) + "..." : title;
-
+                String safeTitle = title.substring(0, Math.min(title.length(), 12));
                 message = users.getName() + " and " + likeCount + " other people like your post " + safeTitle;
             } else {
                 String question = posts.getPostPoll().getQuestion();
-                String safeQuestion = question.length() > 12 ? question.substring(0, 12) + "..." : question;
+                String safeTitle = question.substring(0, Math.min(question.length(), 12));
 
-                message = users.getName() + " and " + likeCount + " other people like your post " + safeQuestion;
+                message = users.getName() + " and " + likeCount + " other people like your post " + safeTitle;
             }
 
             noticeService.sendNotification(users, TypeNotice.LIKE.toString(), postOwnerId, message);

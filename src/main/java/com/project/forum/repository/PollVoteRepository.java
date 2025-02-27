@@ -21,7 +21,7 @@ public interface PollVoteRepository extends JpaRepository<PollVote, String> {
             "FROM poll_vote pv " +
             "WHERE pv.users.id = :userId " +
             "AND pv.poll_options.id = :pollOptionId")
-    Boolean existsVote(@Param("userId") String userId, @Param("pollOptionId") String pollOptionId);
+    boolean existsVote(@Param("userId") String userId, @Param("pollOptionId") String pollOptionId);
 
 
 
