@@ -26,7 +26,7 @@ public class FriendRequest {
     @Column(updatable = false)
     LocalDateTime created_at;
 
-    boolean status;
+    String status;
 
     @ManyToOne
     @JoinColumn(name = "sender_id")

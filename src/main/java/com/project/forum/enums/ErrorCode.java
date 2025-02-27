@@ -15,6 +15,7 @@ public enum ErrorCode {
     E_USERNAME_IS_EXISTS(40002,"UsernameIsExists",HttpStatus.BAD_REQUEST),
     E_EMAIL_IS_EXISTS(40003,"EmailIsExists",HttpStatus.BAD_REQUEST),
     E_USER_IS_ACTIVE(40004,"UserIsActive",HttpStatus.UNAUTHORIZED),
+    E_USERS_ARE_FRIEND(40005,"UsersAreFriend",HttpStatus.UNAUTHORIZED),
 
     //401 UNAUTHORIZED
     E_UNAUTHORIZED(40101,"Authentication",HttpStatus.UNAUTHORIZED),
