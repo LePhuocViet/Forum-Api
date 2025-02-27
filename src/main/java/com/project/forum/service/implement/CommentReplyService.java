@@ -6,6 +6,7 @@ import com.project.forum.enity.CommentReply;
 import com.project.forum.enity.Comments;
 import com.project.forum.enity.Users;
 import com.project.forum.enums.ErrorCode;
+import com.project.forum.enums.RolesCode;
 import com.project.forum.enums.TypeNotice;
 import com.project.forum.exception.WebException;
 import com.project.forum.repository.CommentReplyRepository;
@@ -17,6 +18,9 @@ import com.project.forum.service.INoticeService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -72,5 +76,41 @@ public class CommentReplyService implements ICommentReplyService {
                 .user_img(users.getImg())
                 .build();
     }
+
+    @Override
+    public Page<CommentResponse> findCommentReplyByCommentId(Integer size, Integer page, String commentId) {
+        Pageable pageable = PageRequest.of(page, size);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        if (username.equals("anonymousUser")) {
+            return commentReplyRepository.findCommentReplyByCommentIdAndUserId(commentId, null, pageable);
+        }
+
+        Users users = usersRepository.findByUsername(username)
+                .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+
+        return commentReplyRepository.findCommentReplyByCommentIdAndUserId(commentId, users.getId(), pageable);
+    }
+
+    @Override
+    public boolean deleteCommentReply(String id) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username)
+                .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+
+        CommentReply commentReply = commentReplyRepository.findById(id)
+                .orElseThrow(() -> new WebException(ErrorCode.E_COMMENT_NOT_FOUND));
+
+        if (commentReply.getUsers().getId().equals(users.getId()) ||
+                users.getRoles().equals(RolesCode.ADMIN) ||
+                users.getRoles().equals(RolesCode.EMPLOYEE)) {
+            commentReplyRepository.delete(commentReply);
+            return true;
+        }
+
+        return false;
+    }
+
+
 
 }

@@ -8,12 +8,10 @@ import com.project.forum.service.ICommentReplyService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -28,5 +26,25 @@ public class CommentReplyController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<CommentResponse>builder()
                 .data(commentReplyService.create(createCommentReplyDto))
                 .build());
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @GetMapping
+    ResponseEntity<ApiResponse<Page<CommentResponse>>> getAll(@RequestParam(defaultValue = "0") Integer page,
+                                                              @RequestParam(defaultValue = "10") Integer size,
+                                                              @RequestParam("postId") String postId) {
+        return ResponseEntity.ok(ApiResponse.<Page<CommentResponse>>builder()
+                .data(commentReplyService.findCommentReplyByCommentId(size, page, postId))
+                .build());
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @DeleteMapping("/{id}")
+    ResponseEntity<ApiResponse<Boolean>> delete(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(ApiResponse.<Boolean>builder()
+                        .data(commentReplyService.deleteCommentReply(id))
+                        .build());
+
     }
 }
