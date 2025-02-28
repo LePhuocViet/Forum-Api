@@ -1,5 +1,6 @@
 package com.project.forum.controller;
 
+import com.project.forum.dto.requests.vote.CreateVoteMultipleDto;
 import com.project.forum.dto.responses.vote.PollVoteResponse;
 import com.project.forum.exception.ApiResponse;
 import com.project.forum.service.IVoteService;
@@ -28,9 +29,9 @@ public class PollVoteController {
 
     @SecurityRequirement(name = "BearerAuth")
     @PostMapping("/vote/multiple")
-    ResponseEntity<ApiResponse<PollVoteResponse>> voteMultiple(@PathVariable String postPollId) {
+    ResponseEntity<ApiResponse<PollVoteResponse>> voteMultiple(@RequestBody CreateVoteMultipleDto createVoteMultipleDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PollVoteResponse>builder()
-                .data(voteService.voteOption(postPollId))
+                .data(voteService.voteOptionMultiple(createVoteMultipleDto))
                 .build());
     }
 
