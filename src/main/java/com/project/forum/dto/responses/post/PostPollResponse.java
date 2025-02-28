@@ -31,6 +31,7 @@ public class PostPollResponse {
         this.typePost = typePost;
         this.isVoted = isVoted;
         this.postId = postId;
+        this.typePoll = typePoll;
     }
 }
 
