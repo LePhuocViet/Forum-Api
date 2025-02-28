@@ -85,10 +85,11 @@ public class PostPollService implements IPostPollService {
         postPoll = postPollRepository.saveAndFlush(postPoll);
 
         List<PollOptions> pollOptions = new ArrayList<>();
-        for (CreateOptionDto optionDto : createPostPollDto.getCreateOptionDtoList()) {
-            PollOptions pollOption = creatPollOption(optionDto.getOption_text(), postPoll);
+        for (int i = 0; i < createPostPollDto.getCreateOptionDtoList().size();i++){
+            PollOptions pollOption = creatPollOption(createPostPollDto.getCreateOptionDtoList().get(i).getOption_text(), postPoll);
             pollOptions.add(pollOption);
         }
+
         postPoll.setPollOptions(pollOptions);
         postPollRepository.save(postPoll);
 

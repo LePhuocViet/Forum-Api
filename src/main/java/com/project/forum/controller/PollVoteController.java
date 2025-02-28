@@ -20,10 +20,10 @@ public class PollVoteController {
     IVoteService voteService;
 
     @SecurityRequirement(name = "BearerAuth")
-    @PostMapping("/vote/{postPollId}")
-    ResponseEntity<ApiResponse<PollVoteResponse>> vote(@PathVariable String postPollId) {
+    @PostMapping("/vote/{pollOptionId}")
+    ResponseEntity<ApiResponse<PollVoteResponse>> vote(@PathVariable String pollOptionId) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PollVoteResponse>builder()
-                .data(voteService.voteOption(postPollId))
+                .data(voteService.voteOption(pollOptionId))
                 .build());
     }
 
