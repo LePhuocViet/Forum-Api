@@ -41,7 +41,7 @@ public class CommentController {
     @SecurityRequirement(name = "BearerAuth")
     @DeleteMapping("/{id}")
     ResponseEntity<ApiResponse<Boolean>> delete(@PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.<Boolean>builder()
                         .data(commentService.deleteComment(id))
                         .build());

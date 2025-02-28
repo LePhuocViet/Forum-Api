@@ -104,7 +104,8 @@ public class CommentService implements ICommentService {
         if (comments.getUsers().getId().equals(users.getId()) || users.getRoles().equals(RolesCode.ADMIN) || users.getRoles().equals(RolesCode.EMPLOYEE)) {
             commentsRepository.delete(comments);
             return true;
-        } else return false;
+        } else
+            return false;
 
     }
 }
