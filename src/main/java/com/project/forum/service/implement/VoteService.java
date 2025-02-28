@@ -83,20 +83,26 @@ public class VoteService implements IVoteService {
     public PollVoteResponse voteOptionMultiple(CreateVoteMultipleDto createVoteMultipleDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        for (int i = 0; i < createVoteMultipleDto.getPollOptionId().size();i++ ){
-            PollOptions pollOptions = pollOptionsRepository.findById(createVoteMultipleDto.getPollOptionId().get(i)).orElseThrow(() -> new WebException(ErrorCode.E_POLL_OPTION_NOT_FOUND));
-            PollVote newPollOptions = PollVote.builder()
-                    .poll_options(pollOptions)
-                    .created_at(LocalDateTime.now())
-                    .users(users)
-                    .build();
-            pollVoteRepository.save(newPollOptions);
+
+        for (String pollOptionId : createVoteMultipleDto.getPollOptionId()) {
+            PollOptions pollOptions = pollOptionsRepository.findById(pollOptionId).orElseThrow(() -> new WebException(ErrorCode.E_POLL_OPTION_NOT_FOUND));
+
+            if (pollVoteRepository.existsVote(users.getId(), pollOptions.getId())) {
+                pollVoteRepository.deleteVote(users.getId(), pollOptions.getId());
+            } else {
+
+                PollVote newPollVote = PollVote.builder()
+                        .poll_options(pollOptions)
+                        .created_at(LocalDateTime.now())
+                        .users(users)
+                        .build();
+                pollVoteRepository.save(newPollVote);
+            }
         }
+
         return PollVoteResponse.builder()
                 .voted(true)
                 .message("Vote successful")
                 .build();
-
-
     }
 }
