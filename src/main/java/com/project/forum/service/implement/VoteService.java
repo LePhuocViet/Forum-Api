@@ -83,10 +83,8 @@ public class VoteService implements IVoteService {
     public PollVoteResponse voteOptionMultiple(CreateVoteMultipleDto createVoteMultipleDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-
         for (String pollOptionId : createVoteMultipleDto.getPollOptionId()) {
             PollOptions pollOptions = pollOptionsRepository.findById(pollOptionId).orElseThrow(() -> new WebException(ErrorCode.E_POLL_OPTION_NOT_FOUND));
-
             if (pollVoteRepository.existsVote(users.getId(), pollOptions.getId())) {
                 pollVoteRepository.deleteVote(users.getId(), pollOptions.getId());
             } else {
