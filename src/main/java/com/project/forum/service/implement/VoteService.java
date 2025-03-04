@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -82,13 +86,23 @@ public class VoteService implements IVoteService {
     @Transactional
     public PollVoteResponse voteOptionMultiple(CreateVoteMultipleDto createVoteMultipleDto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        for (String pollOptionId : createVoteMultipleDto.getPollOptionId()) {
-            PollOptions pollOptions = pollOptionsRepository.findById(pollOptionId).orElseThrow(() -> new WebException(ErrorCode.E_POLL_OPTION_NOT_FOUND));
-            if (pollVoteRepository.existsVote(users.getId(), pollOptions.getId())) {
-                pollVoteRepository.deleteVote(users.getId(), pollOptions.getId());
-            } else {
+        Users users = usersRepository.findByUsername(username)
+                .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
 
+        List<PollVote> existingVotes = pollVoteRepository.findByUserAndPollOptions(users.getId(), createVoteMultipleDto.getPollOptionId());
+        Set<String> existingVoteIds = existingVotes.stream()
+                .map(v -> v.getPoll_options().getId())
+                .collect(Collectors.toSet());
+        Set<String> newVoteIds = new HashSet<>(createVoteMultipleDto.getPollOptionId());
+
+        existingVotes.stream()
+                .filter(vote -> !newVoteIds.contains(vote.getPoll_options().getId()))
+                .forEach(pollVoteRepository::delete);
+
+        for (String pollOptionId : newVoteIds) {
+            if (!existingVoteIds.contains(pollOptionId)) {
+                PollOptions pollOptions = pollOptionsRepository.findById(pollOptionId)
+                        .orElseThrow(() -> new WebException(ErrorCode.E_POLL_OPTION_NOT_FOUND));
                 PollVote newPollVote = PollVote.builder()
                         .poll_options(pollOptions)
                         .created_at(LocalDateTime.now())
@@ -100,7 +114,8 @@ public class VoteService implements IVoteService {
 
         return PollVoteResponse.builder()
                 .voted(true)
-                .message("Vote successful")
+                .message("Vote updated successfully")
                 .build();
     }
+
 }

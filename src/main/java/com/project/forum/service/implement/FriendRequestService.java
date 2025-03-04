@@ -34,8 +34,8 @@ public class FriendRequestService implements IFriendRequestService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users userSend = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Users userReceiver = usersRepository.findById(createRequestFriendDto.getReceiver()).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        if (friendRequestRepository.existsByReceiver_IdAndSender_IdAndStatus(userReceiver.getId(),userSend.getId(),StatusFriend.FRIENDS.getStatus())){
-            throw  new WebException(ErrorCode.E_USERS_ARE_FRIEND);
+        if (friendRequestRepository.existsByReceiver_IdAndSender_IdAndStatus(userReceiver.getId(), userSend.getId(), StatusFriend.FRIENDS.getStatus())) {
+            throw new WebException(ErrorCode.E_USERS_ARE_FRIEND);
         }
         FriendRequest friendRequest = FriendRequest.builder()
                 .status(StatusFriend.PENDING.getStatus())
@@ -62,10 +62,10 @@ public class FriendRequestService implements IFriendRequestService {
         Users users1 = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Users users2 = usersRepository.findById(userId).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         FriendRequest friendRequest = friendRequestRepository
-                .findByReceiver_IdAndSender_Id(users1.getId(),users2.getId());
+                .findByReceiver_IdAndSender_Id(users1.getId(), users2.getId()).orElseThrow(() -> new WebException(ErrorCode.E_REQUEST_NOT_FOUND));
         if (Objects.isNull(friendRequest)) {
             FriendRequest friendRequest2 = friendRequestRepository
-                    .findByReceiver_IdAndSender_Id(users2.getId(),users1.getId());
+                    .findByReceiver_IdAndSender_Id(users2.getId(), users1.getId()).orElseThrow(() -> new WebException(ErrorCode.E_REQUEST_NOT_FOUND));
             return FriendShipResponse.builder()
                     .status(friendRequest2.getStatus().toString())
                     .createdAt(friendRequest2.getCreated_at())
@@ -80,7 +80,24 @@ public class FriendRequestService implements IFriendRequestService {
 
     @Override
     public boolean acceptFriendRequest(String userId) {
-
-        return false;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        FriendRequest  friendRequest = friendRequestRepository.findByReceiver_IdAndSender_Id(users.getId(),userId)
+                .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        friendRequest.setStatus(StatusFriend.FRIENDS.getStatus());
+        friendRequestRepository.save(friendRequest);
+        return true;
     }
+
+    @Override
+    public boolean rejectFriendRequest(String userId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        FriendRequest  friendRequest = friendRequestRepository.findByReceiver_IdAndSender_Id(users.getId(),userId)
+                .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        friendRequestRepository.delete(friendRequest);
+        return true;
+    }
+
+
 }

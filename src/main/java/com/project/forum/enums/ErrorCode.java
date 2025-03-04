@@ -35,6 +35,7 @@ public enum ErrorCode {
     E_LANGUAGE_NOT_FOUND(40405,"LanguageNotFound",HttpStatus.NOT_FOUND),
     E_ROLE_NOT_FOUND(40406,"RoleNotFound",HttpStatus.NOT_FOUND),
     E_COMMENT_NOT_FOUND(40407,"CommentNotFound",HttpStatus.NOT_FOUND),
+    E_REQUEST_NOT_FOUND(40408,"RequestNotFound",HttpStatus.NOT_FOUND),
 
 
 

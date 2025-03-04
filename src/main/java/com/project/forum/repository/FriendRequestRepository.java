@@ -11,5 +11,9 @@ public interface FriendRequestRepository extends JpaRepository<FriendRequest, St
 
     boolean existsByReceiver_IdAndSender_IdAndStatus(String receiverId, String senderId,String status);
 
-    FriendRequest findByReceiver_IdAndSender_Id(String receiverId, String senderId);
+    Optional<FriendRequest> findByReceiver_IdAndSender_Id(String receiverId, String senderId);
+
+    Optional<FriendRequest> findBySender_Id(String senderId);
+
+    void deleteByReceiver_IdAndSender_Id(String receiverId, String senderId);
 }

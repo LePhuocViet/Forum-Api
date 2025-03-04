@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PollVoteRepository extends JpaRepository<PollVote, String> {
     @Modifying
@@ -43,6 +45,12 @@ public interface PollVoteRepository extends JpaRepository<PollVote, String> {
     void deleteVoteByUserIdAndPollOptionIdAndPostPollId(@Param("userId") String userId,
                                                         @Param("pollOptionId") String pollOptionId,
                                                         @Param("postPollId") String postPollId);
+
+    @Query("SELECT pv FROM poll_vote pv " +
+            "WHERE pv.users.id = :userId " +
+            "AND pv.poll_options.id IN :pollOptionIds")
+    List<PollVote> findByUserAndPollOptions(@Param("userId") String userId,
+                                            @Param("pollOptionIds") List<String> pollOptionIds);
 
 
 }

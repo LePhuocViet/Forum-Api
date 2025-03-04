@@ -73,14 +73,6 @@ public class Users {
     @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<Messages> messages;
 
-    @ManyToMany
-    @JoinTable(
-            name = "friend_ship",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id")
-    )
-    private Set<Users> friends = new HashSet<>();
-
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     List<FriendRequest> sentFriendRequests;
 

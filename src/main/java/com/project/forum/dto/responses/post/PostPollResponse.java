@@ -22,9 +22,10 @@ public class PostPollResponse {
     String typePoll;
     String postId;
     Boolean isVoted;
+    int countVote;
 
 
-    public PostPollResponse(String id, String question, String typePost, String typePoll,Boolean isVoted,String postId) {
+    public PostPollResponse(String id, String question, String typePost, String typePoll,Boolean isVoted,String postId,int countVote) {
         this.id = id;
         this.question = question;
         this.pollOptions = new ArrayList<>();
@@ -32,6 +33,7 @@ public class PostPollResponse {
         this.isVoted = isVoted;
         this.postId = postId;
         this.typePoll = typePoll;
+        this.countVote = countVote;
     }
 }
 

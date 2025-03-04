@@ -16,4 +16,5 @@ public class PollOptionResponse {
     String optionText;
     Long voteCount;
     Boolean isSelected;
+
 }
