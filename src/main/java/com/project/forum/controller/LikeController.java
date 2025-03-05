@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/likes")
-@Tag(name = "8. Likes")
+@Tag(name = "08. Likes")
 public class LikeController {
 
     ILikeService likeService;

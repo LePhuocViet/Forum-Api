@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/mail")
-@Tag(name = "3. Mail")
+@Tag(name = "03. Mail")
 public class MailController {
 
     IMailService mailService;

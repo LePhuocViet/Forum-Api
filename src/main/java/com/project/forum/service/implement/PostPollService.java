@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -54,6 +55,9 @@ public class PostPollService implements IPostPollService {
             Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
             pollOptions = pollOptionsRepository.getPollOptionsWithVotes(postPoll.getId(), users.getId());
         }
+        pollOptions = pollOptions.stream()
+                .sorted(Comparator.comparing(PollOptionResponse::getCreated_at))
+                .toList();
         boolean isVoted = pollOptions.stream().anyMatch(PollOptionResponse::getIsSelected);
         postPoll.setPollOptions(pollOptions);
         postPoll.setIsVoted(isVoted);
@@ -103,6 +107,7 @@ public class PostPollService implements IPostPollService {
         PollOptions pollOptions = PollOptions.builder()
                 .postPoll(postPoll)
                 .option_text(option_text)
+                .created_at(LocalDateTime.now())
                 .build();
         return  pollOptionsRepository.save(pollOptions);
     }

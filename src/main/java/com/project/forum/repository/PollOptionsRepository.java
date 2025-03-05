@@ -13,11 +13,12 @@ import java.util.List;
 public interface PollOptionsRepository extends JpaRepository<PollOptions, String> {
     @Query("SELECT NEW com.project.forum.dto.responses.post.PollOptionResponse( " +
             "po.id, po.option_text, COUNT(DISTINCT pv.id), " +
-            "CASE WHEN pv.users.id = :userId THEN true ELSE false END ) " +
+            "CASE WHEN pv.users.id = :userId THEN true ELSE false END ," +
+            "po.created_at) " +
             "FROM poll_options po " +
             "LEFT JOIN po.pollVotes pv " +
-            "LEFT JOIN po.postPoll pp " +  // Join với PostPoll
-            "LEFT JOIN pp.posts p " +  // Join với Posts để lấy typePost
+            "LEFT JOIN po.postPoll pp " +
+            "LEFT JOIN pp.posts p " +
             "WHERE pp.id = :pollId " +
             "GROUP BY po.id, po.option_text, pv.users.id")
     List<PollOptionResponse> getPollOptionsWithVotes(@Param("pollId") String pollId,

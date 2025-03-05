@@ -17,7 +17,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/comments")
-@Tag(name = "9. Comment")
+@Tag(name = "09. Comment")
 public class CommentController {
 
     ICommentService commentService;

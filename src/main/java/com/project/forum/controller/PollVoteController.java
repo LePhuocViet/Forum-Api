@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/poll-vote")
-@Tag(name = "7. Poll Vote")
+@Tag(name = "07. Poll Vote")
 public class PollVoteController {
 
     IVoteService voteService;

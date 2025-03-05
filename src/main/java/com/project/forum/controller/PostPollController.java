@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/post-poll")
-@Tag(name = "5. Post Poll")
+@Tag(name = "05. Post Poll")
 public class PostPollController {
     IPostPollService postPollService;
 

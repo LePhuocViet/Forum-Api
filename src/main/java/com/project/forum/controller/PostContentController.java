@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/post-content")
-@Tag(name = "6. Post content")
+@Tag(name = "06. Post content")
 public class PostContentController {
     IPostContentService postContentService;
 

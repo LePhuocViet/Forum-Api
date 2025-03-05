@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/posts")
-@Tag(name = "4. Post")
+@Tag(name = "04. Post")
 public class PostController {
 
     IPostService postService;

@@ -14,8 +14,10 @@ public enum ErrorCode {
     E_PASSWORD_NOT_MATCH(40001,"PasswordNotMatch",HttpStatus.BAD_REQUEST),
     E_USERNAME_IS_EXISTS(40002,"UsernameIsExists",HttpStatus.BAD_REQUEST),
     E_EMAIL_IS_EXISTS(40003,"EmailIsExists",HttpStatus.BAD_REQUEST),
-    E_USER_IS_ACTIVE(40004,"UserIsActive",HttpStatus.UNAUTHORIZED),
-    E_USERS_ARE_FRIEND(40005,"UsersAreFriend",HttpStatus.UNAUTHORIZED),
+    E_USER_IS_ACTIVE(40004,"UserIsActive",HttpStatus.BAD_REQUEST),
+    E_USERS_ARE_FRIEND(40005,"UsersAreFriend",HttpStatus.BAD_REQUEST),
+    E_FILE_TO_LARGE(40006,"FileToLarge",HttpStatus.BAD_REQUEST),
+    E_FILE_INVALID(40007,"FileInvalid",HttpStatus.BAD_REQUEST),
 
     //401 UNAUTHORIZED
     E_UNAUTHORIZED(40101,"Authentication",HttpStatus.UNAUTHORIZED),
@@ -37,7 +39,8 @@ public enum ErrorCode {
     E_COMMENT_NOT_FOUND(40407,"CommentNotFound",HttpStatus.NOT_FOUND),
     E_REQUEST_NOT_FOUND(40408,"RequestNotFound",HttpStatus.NOT_FOUND),
 
-
+    //500 Server
+    E_SERVER_ERROR(50001,"ServerError",HttpStatus.INTERNAL_SERVER_ERROR);
 
 ;
     private int code;

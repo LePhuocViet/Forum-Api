@@ -1,10 +1,8 @@
-package com.project.forum.dto.responses.post;
+package com.project.forum.dto.responses.upload;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -12,12 +10,10 @@ import java.time.LocalDateTime;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class PollOptionResponse {
+public class UploadImageResponse {
 
-    String id;
-    String optionText;
-    Long voteCount;
-    Boolean isSelected;
-    LocalDateTime created_at;
+    boolean success;
+    String url;
+    String message;
 
 }

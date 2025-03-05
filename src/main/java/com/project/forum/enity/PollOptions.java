@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -24,7 +25,7 @@ public class PollOptions {
 
     String option_text;
 
-
+    LocalDateTime created_at;
 
     @ManyToOne
     @JoinColumn(name = "poll_id")

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/auth")
-@Tag(name = "1. Authentication")
+@Tag(name = "01. Authentication")
 public class AuthController {
 
     IAuthService authService;
