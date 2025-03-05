@@ -22,10 +22,10 @@ public class PostPollResponse {
     String typePoll;
     String postId;
     Boolean isVoted;
-    int countVote;
+    Long countVote;
 
 
-    public PostPollResponse(String id, String question, String typePost, String typePoll,Boolean isVoted,String postId,int countVote) {
+    public PostPollResponse(String id, String question, String typePost, String typePoll,Boolean isVoted,String postId, Long countVote) {
         this.id = id;
         this.question = question;
         this.pollOptions = new ArrayList<>();
