@@ -31,6 +31,6 @@ public class PollOptions {
     @JoinColumn(name = "poll_id")
     PostPoll postPoll;
 
-    @OneToMany(mappedBy = "poll_options")
+    @OneToMany(mappedBy = "poll_options", cascade = CascadeType.REMOVE)
     List<PollVote> pollVotes;
 }
