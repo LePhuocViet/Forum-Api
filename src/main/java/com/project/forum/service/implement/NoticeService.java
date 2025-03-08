@@ -19,6 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -33,20 +35,20 @@ public class NoticeService implements INoticeService {
 
         if (noticesRepository.existsNoticesByTypeAndPost_idAndUser_id(type, postId, users.getId())) {
             noticesRepository.updateNoticeMessage(type,postId,users.getId(),message);
-            String destination = "/user/" + users.getId() + "/queue/notifications";
-            messagingTemplate.convertAndSend(destination, message);
+            String destination = "/queue/notifications";
+            messagingTemplate.convertAndSendToUser(users.getId(), destination, message);
         } else {
             Notices notice = Notices.builder()
                     .users(users)
                     .post_id(postId)
                     .type(type)
                     .message(message)
+                    .created_at(LocalDateTime.now())
                     .status(false)
                     .build();
             noticesRepository.save(notice);
-
-            String destination = "/user/" + users.getId() + "/queue/notifications";
-            messagingTemplate.convertAndSend(destination, notice.getMessage());
+            String destination = "/queue/notifications";
+            messagingTemplate.convertAndSendToUser(users.getId(), destination, message);
         }
 
 

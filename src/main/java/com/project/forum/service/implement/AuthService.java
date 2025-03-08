@@ -147,7 +147,7 @@ public class AuthService implements IAuthService {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             return authHeader.substring(7);
         }
-        return null;
+        return request.getParameter("token");
     }
 
     @Override
