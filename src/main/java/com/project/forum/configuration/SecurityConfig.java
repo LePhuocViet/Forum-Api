@@ -26,7 +26,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests(requests ->
                 requests
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**","/ws/**", "/user/**", "/topic/**").permitAll()
                         .anyRequest().permitAll());
         httpSecurity.oauth2ResourceServer(oauth2ResourceServer ->
                 oauth2ResourceServer.jwt(jwt ->
@@ -34,6 +34,7 @@ public class SecurityConfig {
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()
                                 )).authenticationEntryPoint(new JwtAuthEntryPoint()));
         httpSecurity.csrf(http -> http.disable());
+        httpSecurity.headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()));
 
         return httpSecurity.build();
     }
@@ -52,7 +53,7 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
+                registry.addMapping("**")
                         .allowedOrigins("http://localhost:1407","http://127.0.0.1:5500")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")

@@ -25,7 +25,7 @@ public class SocketAuthConfig implements HandshakeInterceptor {
             HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
             String token =  authService.extractToken(httpServletRequest);
             if (token != null && authService.introspect(token).isResult()) {
-                attributes.put("userId", authService.getUserIdFromToken(token));
+//                attributes.put("userId", authService.getUserIdFromToken(token));
                 return true;
             }
         }

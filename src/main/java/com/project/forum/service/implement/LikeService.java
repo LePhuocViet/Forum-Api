@@ -75,7 +75,7 @@ public class LikeService implements ILikeService {
                 message = users.getName() + " and " + likeCount + " other people like your post " + safeTitle;
             }
 
-            noticeService.sendNotification(posts.getUsers(), TypeNotice.LIKE.toString(), postOwnerId, message);
+            noticeService.sendNotification(posts.getUsers(), TypeNotice.LIKE.toString(),message, postOwnerId );
         }
 
         return LikeResponse.builder()
