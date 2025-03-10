@@ -39,5 +39,7 @@ public class PostResponse {
 
     Long comment;
 
+    boolean isShow;
+
 
 }

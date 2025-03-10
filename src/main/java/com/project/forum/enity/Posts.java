@@ -40,6 +40,7 @@ public class Posts {
     @JoinColumn(name = "user_id")
     Users users;
 
+    boolean isShow = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id")

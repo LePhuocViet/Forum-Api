@@ -35,9 +35,9 @@ public class NoticeService implements INoticeService {
 
         if (noticesRepository.existsNoticesByTypeAndPost_idAndUser_id(type, postId, users.getId())) {
             noticesRepository.updateNoticeMessage(type,postId,users.getId(),message);
-//            String destination = "/user/" + users.getId() + "/queue/notifications";
-            String destination = "/topic/"+users.getId();
-            messagingTemplate.convertAndSend( destination, message);
+            String destination = "/queue/notifications";
+//            String destination = "/topic/"+users.getId();
+            messagingTemplate.convertAndSendToUser(users.getId().toString(), "/queue/notifications", message);
         } else {
             Notices notice = Notices.builder()
                     .users(users)
@@ -48,9 +48,9 @@ public class NoticeService implements INoticeService {
                     .status(false)
                     .build();
             noticesRepository.save(notice);
-//            String destination = "/user/" + users.getId() + "/queue/notifications";
-            String destination = "/topic/"+users.getId();
-            messagingTemplate.convertAndSend( destination, message);
+            String destination = "/queue/notifications";
+//            String destination = "/topic/"+users.getId();
+            messagingTemplate.convertAndSendToUser(users.getId().toString(), "/queue/notifications", message);
         }
 
 
