@@ -64,6 +64,18 @@ public class LikeService implements ILikeService {
                     TypeNotice.LIKE.toString(), posts.getId());
 
             String message = "";
+            if (likeCount == 0) {
+                if (posts.getType_post().equals(TypePost.CONTENT.toString())) {
+                    String title = posts.getPostContent().getTitle();
+                    String safeTitle = title.substring(0, Math.min(title.length(), 12));
+                    message = users.getName() + " like your post " + safeTitle;
+                } else {
+                    String question = posts.getPostPoll().getQuestion();
+                    String safeTitle = question.substring(0, Math.min(question.length(), 12));
+
+                    message = users.getName() + " like your post " + safeTitle;
+                }
+            }
             if (posts.getType_post().equals(TypePost.CONTENT.toString())) {
                 String title = posts.getPostContent().getTitle();
                 String safeTitle = title.substring(0, Math.min(title.length(), 12));
