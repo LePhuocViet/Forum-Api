@@ -4,10 +4,12 @@ import com.project.forum.dto.requests.post.CreatePostContentDto;
 import com.project.forum.dto.responses.post.PostContentResponse;
 import com.project.forum.dto.responses.post.PostResponse;
 
+import java.io.IOException;
+
 public interface IPostContentService {
 
     PostContentResponse findPostContentByPostId(String postId);
 
-    PostResponse create(CreatePostContentDto createPostContentDto);
+    PostResponse create(CreatePostContentDto createPostContentDto) throws IOException;
 
 }

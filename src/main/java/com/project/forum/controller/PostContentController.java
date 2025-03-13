@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/post-content")
@@ -31,7 +33,7 @@ public class PostContentController {
 
     @SecurityRequirement(name = "BearerAuth")
     @PostMapping()
-    ResponseEntity<ApiResponse<PostResponse>> create(@RequestBody CreatePostContentDto createPostContentDto) {
+    ResponseEntity<ApiResponse<PostResponse>> create(@RequestBody CreatePostContentDto createPostContentDto) throws IOException {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PostResponse>builder()
                 .data(postContentService.create(createPostContentDto))
                 .build());

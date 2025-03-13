@@ -1,5 +1,8 @@
 package com.project.forum.service.implement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.forum.dto.responses.notices.NoticeMessage;
 import com.project.forum.dto.responses.notices.NoticeResponse;
 import com.project.forum.enity.Notices;
 import com.project.forum.enity.Users;
@@ -29,15 +32,21 @@ public class NoticeService implements INoticeService {
      final SimpMessagingTemplate messagingTemplate;
      final NoticesRepository noticesRepository;
      final UsersRepository usersRepository;
+    private final ObjectMapper objectMapper;
 
-     @Transactional
-    public void sendNotification(Users users, String type, String message, String postId) {
+    @Transactional
+    public void sendNotification(Users users, String type, String message, String postId) throws JsonProcessingException {
 
         if (noticesRepository.existsNoticesByTypeAndPost_idAndUser_id(type, postId, users.getId())) {
             noticesRepository.updateNoticeMessage(type,postId,users.getId(),message);
             String destination = "/queue/notifications";
 //            String destination = "/topic/"+users.getId();
-            messagingTemplate.convertAndSendToUser(users.getId().toString(), "/queue/notifications", message);
+            NoticeMessage noticeMessage = NoticeMessage.builder()
+                    .message(message)
+                    .postId(postId)
+                    .build();
+            String resultNoticeJson = objectMapper.writeValueAsString(noticeMessage);
+            messagingTemplate.convertAndSendToUser(users.getId().toString(), destination, resultNoticeJson);
         } else {
             Notices notice = Notices.builder()
                     .users(users)
@@ -49,8 +58,13 @@ public class NoticeService implements INoticeService {
                     .build();
             noticesRepository.save(notice);
             String destination = "/queue/notifications";
+            NoticeMessage noticeMessage = NoticeMessage.builder()
+                    .message(message)
+                    .postId(postId)
+                    .build();
+            String resultNoticeJson = objectMapper.writeValueAsString(noticeMessage);
 //            String destination = "/topic/"+users.getId();
-            messagingTemplate.convertAndSendToUser(users.getId().toString(), "/queue/notifications", message);
+            messagingTemplate.convertAndSendToUser(users.getId().toString(), destination, resultNoticeJson);
         }
 
 

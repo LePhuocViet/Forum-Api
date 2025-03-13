@@ -1,8 +1,8 @@
 package com.project.forum.service.implement;
 
 import com.project.forum.dto.requests.friend.CreateRequestFriendDto;
-import com.project.forum.dto.responses.Friend.FriendRequestResponse;
-import com.project.forum.dto.responses.Friend.FriendShipResponse;
+import com.project.forum.dto.responses.friend.FriendRequestResponse;
+import com.project.forum.dto.responses.friend.FriendShipResponse;
 import com.project.forum.enity.FriendRequest;
 import com.project.forum.enity.Users;
 import com.project.forum.enums.ErrorCode;

@@ -3,25 +3,25 @@ package com.project.forum.service.implement;
 import com.project.forum.dto.requests.post.CreatePostContentDto;
 import com.project.forum.dto.responses.post.PostContentResponse;
 import com.project.forum.dto.responses.post.PostResponse;
-import com.project.forum.enity.Language;
-import com.project.forum.enity.PostContent;
-import com.project.forum.enity.Posts;
-import com.project.forum.enity.Users;
+import com.project.forum.enity.*;
 import com.project.forum.enums.ErrorCode;
+import com.project.forum.enums.TypeNotice;
 import com.project.forum.enums.TypePost;
 import com.project.forum.exception.WebException;
 import com.project.forum.mapper.PostMapper;
-import com.project.forum.repository.LanguageRepository;
-import com.project.forum.repository.PostContentRepository;
-import com.project.forum.repository.PostsRepository;
-import com.project.forum.repository.UsersRepository;
+import com.project.forum.repository.*;
+import com.project.forum.service.IAIService;
+import com.project.forum.service.INoticeService;
 import com.project.forum.service.IPostContentService;
+import com.project.forum.service.IPromotionService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.cloudinary.json.JSONObject;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -36,9 +36,19 @@ public class PostContentService implements IPostContentService {
 
     UsersRepository usersRepository;
 
+    PostReportsRepository postReportsRepository;
+
     PostMapper postMapper;
 
     LanguageRepository languageRepository;
+
+    IPromotionService promotionService;
+
+    IAIService iaiService;
+
+    INoticeService noticeService;
+
+    NoticesRepository noticesRepository;
 
     @Override
     public PostContentResponse findPostContentByPostId(String postId) {
@@ -46,7 +56,7 @@ public class PostContentService implements IPostContentService {
     }
 
     @Override
-    public PostResponse create(CreatePostContentDto createPostContentDto) {
+    public PostResponse create(CreatePostContentDto createPostContentDto) throws IOException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users user = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Language language = languageRepository.findByName(createPostContentDto.getLanguage()).orElseThrow(() -> new WebException(ErrorCode.E_LANGUAGE_NOT_FOUND) );
@@ -64,8 +74,34 @@ public class PostContentService implements IPostContentService {
                 .img_url(createPostContentDto.getImg_url())
                 .posts(posts)
                 .build();
-        postContentRepository.save(postContent);
 
+
+        String promotion = promotionService.generatePromotionPostContentMessage(posts.getLanguage().getName(),
+                postContent.getTitle() + " " + postContent.getContent());
+        String aiResponse = iaiService.getAnswer(promotion);
+        JSONObject jsonObject = new JSONObject(aiResponse);
+        boolean result = jsonObject.getBoolean("result");
+        if (!result){
+            String message = jsonObject.getString("message");
+            posts.setPostShow(false);
+            PostReports postReports = PostReports.builder()
+                    .reason(message)
+                    .posts(posts)
+                    .build();
+            postReportsRepository.save(postReports);
+            Notices notices = Notices.builder()
+                    .users(user)
+                    .post_id(posts.getId())
+                    .message(message)
+                    .type(TypeNotice.POST.toString())
+                    .status(false)
+                    .build();
+            noticesRepository.save(notices);
+            noticeService.sendNotification(user, TypeNotice.POST.toString(),message, posts.getId());
+        } else {
+            posts.setPostShow(true);
+        }
+        postsRepository.save(posts);
         return postMapper.toPostsResponse(posts);
     }
 

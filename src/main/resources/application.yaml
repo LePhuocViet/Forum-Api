@@ -29,5 +29,7 @@ app:
     allowed-types: image/jpeg,image/png,image/jpg
     max-size: 5242880
 
-
+AI:
+  key:
+  url: "https://api.openai.com/v1/chat/completions"
 
