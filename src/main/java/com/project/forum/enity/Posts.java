@@ -59,6 +59,9 @@ public class Posts {
     @OneToMany(mappedBy = "posts",orphanRemoval = true)
     List<Advertisement> advertisements;
 
+    @OneToMany(mappedBy = "posts",orphanRemoval = true)
+    List<PostContentHistory> postContentHistories;
+
     @OneToOne(mappedBy = "posts",orphanRemoval = true)
     private PostPoll postPoll;
 

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
-@Tag(name = "12. AI")
+@RequestMapping("/ai")
+@Tag(name = "13. AI")
 public class AiController {
 
     IAIService aiService;

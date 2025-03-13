@@ -19,4 +19,6 @@ public interface IUserService {
         UserResponse getUserById(String id);
 
         UserResponse getMyInfo();
+
+        UserResponse getUserByUsername(String username);
 }

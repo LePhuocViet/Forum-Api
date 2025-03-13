@@ -96,6 +96,10 @@ public class UserService implements IUserService {
         return userMapper.toUserResponse(users);
     }
 
-    
+    @Override
+    public UserResponse getUserByUsername(String username) {
+        return null;
+    }
+
 
 }
