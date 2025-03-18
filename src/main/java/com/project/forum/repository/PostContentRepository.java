@@ -17,4 +17,6 @@ public interface PostContentRepository extends JpaRepository<PostContent, String
             "FROM post_content pc " +
             "WHERE pc.posts.id = :postId")
     Optional<PostContentResponse> findPostContentByPosts_Id(@Param("postId") String postId);
+
+//    PostContent updatePostContentByPosts_Id(@Param("postId") String id, @Param("title") String title, @Param("content") String content);
 }

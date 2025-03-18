@@ -21,7 +21,7 @@ public class PostRepostController {
     @GetMapping()
     ResponseEntity<ApiResponse<Page<PostRepostResponse>>> getAll(@RequestParam(defaultValue = "0") Integer page,
                                                                  @RequestParam(defaultValue = "10") Integer size,
-                                                                 @RequestParam() String postId) {
+                                                                 @RequestParam(defaultValue = "") String postId) {
         return ResponseEntity.ok(ApiResponse.<Page<PostRepostResponse>>builder()
                 .data(postReport.getAll(page, size, postId))
                 .build());

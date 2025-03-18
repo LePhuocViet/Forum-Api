@@ -83,7 +83,7 @@ public class CommentService implements ICommentService {
                 .created_at(LocalDateTime.now())
                 .build();
 
-        noticeService.sendNotification(users, TypeNotice.COMMENT.toString(), posts.getId(), message);
+        noticeService.sendNotification(posts.getUsers(), TypeNotice.COMMENT.toString(), message, posts.getId());
 
         commentsRepository.save(comments);
         CommentResponse commentResponse = commentMapper.toCommentResponse(comments);

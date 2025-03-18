@@ -1,6 +1,7 @@
 package com.project.forum.service.implement;
 
 import com.project.forum.dto.requests.post.CreatePostContentDto;
+import com.project.forum.dto.requests.post.UpdatePostContentDto;
 import com.project.forum.dto.responses.post.PostContentResponse;
 import com.project.forum.dto.responses.post.PostResponse;
 import com.project.forum.enity.*;
@@ -49,6 +50,8 @@ public class PostContentService implements IPostContentService {
     INoticeService noticeService;
 
     NoticesRepository noticesRepository;
+
+    PostContentHistoryRepository postContentHistoryRepository;
 
     @Override
     public PostContentResponse findPostContentByPostId(String postId) {
@@ -103,6 +106,42 @@ public class PostContentService implements IPostContentService {
         }
         postsRepository.save(posts);
         return postMapper.toPostsResponse(posts);
+    }
+
+    @Override
+    public PostResponse update(UpdatePostContentDto updatePostContentDto) throws IOException {
+//        Posts posts =
+//
+//        String promotion = promotionService.generatePromotionPostContentMessage(posts.getLanguage().getName(),
+//                postContent.getTitle() + " " + postContent.getContent());
+//        String aiResponse = iaiService.getAnswer(promotion);
+//        JSONObject jsonObject = new JSONObject(aiResponse);
+//        boolean result = jsonObject.getBoolean("result");
+//        if (!result){
+//            String message = jsonObject.getString("message");
+//            posts.setPostShow(false);
+//            PostReports postReports = PostReports.builder()
+//                    .reason(message)
+//                    .posts(posts)
+//                    .build();
+//            postReportsRepository.save(postReports);
+//            Notices notices = Notices.builder()
+//                    .users(user)
+//                    .post_id(posts.getId())
+//                    .message(message)
+//                    .type(TypeNotice.POST.toString())
+//                    .status(false)
+//                    .build();
+//            noticesRepository.save(notices);
+//            noticeService.sendNotification(user, TypeNotice.POST.toString(),message, posts.getId());
+//        } else {
+//            posts.setPostShow(true);
+//        }
+//        postsRepository.save(posts);
+//        return postMapper.toPostsResponse(posts);
+
+
+        return null;
     }
 
 }
