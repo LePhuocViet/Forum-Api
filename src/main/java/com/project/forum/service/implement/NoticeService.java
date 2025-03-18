@@ -64,7 +64,7 @@ public class NoticeService implements INoticeService {
                     .build();
             String resultNoticeJson = objectMapper.writeValueAsString(noticeMessage);
 //            String destination = "/topic/"+users.getId();
-            messagingTemplate.convertAndSendToUser(users.getId().toString(), destination, resultNoticeJson);
+            messagingTemplate.convertAndSendToUser(users.getId().toString(), destination, noticeMessage.toString());
         }
 
 
