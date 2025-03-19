@@ -33,9 +33,9 @@ public class CommentReplyController {
     @GetMapping
     ResponseEntity<ApiResponse<Page<CommentResponse>>> getAll(@RequestParam(defaultValue = "0") Integer page,
                                                               @RequestParam(defaultValue = "10") Integer size,
-                                                              @RequestParam("postId") String postId) {
+                                                              @RequestParam(defaultValue = "") String commentId) {
         return ResponseEntity.ok(ApiResponse.<Page<CommentResponse>>builder()
-                .data(commentReplyService.findCommentReplyByCommentId(size, page, postId))
+                .data(commentReplyService.findCommentReplyByCommentId(size, page, commentId))
                 .build());
     }
 
