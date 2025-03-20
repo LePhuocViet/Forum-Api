@@ -2,14 +2,11 @@ package com.project.forum.enity;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.project.forum.enums.StatusUser;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -76,8 +73,8 @@ public class Users {
     List<Messages> messages;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-    List<FriendRequest> sentFriendRequests;
+    List<FriendShip> sentFriendShips;
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-    List<FriendRequest> receivedFriendRequests;
+    List<FriendShip> receivedFriendShips;
 }

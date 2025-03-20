@@ -3,21 +3,23 @@ package com.project.forum.controller;
 import com.project.forum.dto.requests.friend.CreateRequestFriendDto;
 import com.project.forum.dto.responses.friend.FriendRequestResponse;
 import com.project.forum.dto.responses.friend.FriendShipResponse;
+import com.project.forum.dto.responses.user.UserFriendResponse;
 import com.project.forum.exception.ApiResponse;
-import com.project.forum.service.IFriendRequestService;
+import com.project.forum.service.IFriendShipService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/friend-request")
-@Tag(name = "11. Friend Request")
-public class FriendRequestController {
+@RequestMapping("/friend-ship")
+@Tag(name = "11. Friend Ship")
+public class FriendShipController {
 
-    private final IFriendRequestService friendRequestService;
+    private final IFriendShipService friendRequestService;
     @SecurityRequirement(name = "BearerAuth")
     @PostMapping()
     public ResponseEntity<ApiResponse<FriendRequestResponse>> sendRequest(@RequestBody CreateRequestFriendDto createRequestFriendDto) {
@@ -44,6 +46,15 @@ public class FriendRequestController {
     public ResponseEntity<ApiResponse<Boolean>> rejectFriendRequest(@PathVariable String userId) {
         return ResponseEntity.ok(ApiResponse.<Boolean>builder()
                 .data(friendRequestService.rejectFriendRequest(userId))
+                .build());
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @GetMapping("/friendship")
+    public ResponseEntity<ApiResponse<Page<UserFriendResponse>>> getFriendShip(@RequestParam(defaultValue = "0") Integer page,
+                                                                               @RequestParam(defaultValue = "10") Integer size) {
+        return ResponseEntity.ok(ApiResponse.<Page<UserFriendResponse>>builder()
+                        .data(friendRequestService.getUserListFriend(page,size))
                 .build());
     }
 }

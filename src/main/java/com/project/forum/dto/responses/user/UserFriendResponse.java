@@ -1,11 +1,8 @@
 package com.project.forum.dto.responses.user;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.project.forum.enity.Roles;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -13,8 +10,7 @@ import java.util.Set;
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserResponse {
-
+public class UserFriendResponse {
     String id;
 
     String name;
@@ -29,6 +25,5 @@ public class UserResponse {
 
     String username;
 
-    String roles;
-
+    long count;
 }

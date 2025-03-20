@@ -24,6 +24,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -93,7 +95,13 @@ public class UserService implements IUserService {
     public UserResponse getMyInfo() {
         Users users = usersRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName())
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        return userMapper.toUserResponse(users);
+        UserResponse userResponse = userMapper.toUserResponse(users);
+        Set<String> roleNames = users.getRoles()
+                .stream()
+                .map(Roles::getName)
+                .collect(Collectors.toSet());
+        userResponse.setRoles(roleNames.toString());
+        return userResponse;
     }
 
     @Override

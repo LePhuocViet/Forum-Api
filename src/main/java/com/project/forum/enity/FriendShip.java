@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Entity(name = "friend_request")
+@Entity(name = "friend_ship")
 @EntityListeners(AuditingEntityListener.class)
-public class FriendRequest {
+public class FriendShip {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;

@@ -23,7 +23,7 @@ public class UserController {
     IUserService userService;
 
 
-
+    @SecurityRequirement(name = "BearerAuth")
     @PostMapping()
     ResponseEntity<ApiResponse<UserResponse>> create(@RequestBody(required = true) CreateUserDto createUserDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<UserResponse>builder()
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     @SecurityRequirement(name = "BearerAuth")
-    @PutMapping("/update")
+    @PutMapping("")
     ResponseEntity<ApiResponse<UserResponse>> update(@RequestBody(required = true) UpdateUserDto updateUserDto) {
         return ResponseEntity.ok(ApiResponse.<UserResponse>builder()
                 .data(userService.update(updateUserDto))
@@ -46,7 +46,7 @@ public class UserController {
                 .data(userService.setStatus(id, statusUser))
                 .build());
     }
-
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping()
     ResponseEntity<ApiResponse<Page<UserResponse>>> getAllUsers(@RequestParam(defaultValue = "0") Integer page,
                                                                 @RequestParam(defaultValue = "10") Integer size) {
