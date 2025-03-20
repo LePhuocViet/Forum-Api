@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -65,9 +66,9 @@ public class FriendShipService implements IFriendShipService {
         }
         Users users1 = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Users users2 = usersRepository.findById(userId).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        FriendShip friendShip = friendShipRepository
-                .findByReceiver_IdAndSender_Id(users1.getId(), users2.getId()).orElseThrow(() -> new WebException(ErrorCode.E_REQUEST_NOT_FOUND));
-        if (Objects.isNull(friendShip)) {
+        Optional<FriendShip> friendShip = friendShipRepository
+                .findByReceiver_IdAndSender_Id(users1.getId(), users2.getId());
+        if (!Objects.isNull(friendShip)) {
             FriendShip friendShip2 = friendShipRepository
                     .findByReceiver_IdAndSender_Id(users2.getId(), users1.getId()).orElseThrow(() -> new WebException(ErrorCode.E_REQUEST_NOT_FOUND));
             return FriendShipResponse.builder()
@@ -76,8 +77,8 @@ public class FriendShipService implements IFriendShipService {
                     .build();
         } else {
             return FriendShipResponse.builder()
-                    .status(friendShip.getStatus().toString())
-                    .createdAt(friendShip.getCreated_at())
+                    .status(friendShip.get().getStatus().toString())
+                    .createdAt(friendShip.get().getCreated_at())
                     .build();
         }
     }
