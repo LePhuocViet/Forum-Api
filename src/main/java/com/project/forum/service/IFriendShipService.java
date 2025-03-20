@@ -9,7 +9,7 @@ import org.springframework.data.domain.Page;
 
 public interface IFriendShipService {
 
-    FriendRequestResponse sendRequest(CreateRequestFriendDto createRequestFriendDto);
+    FriendRequestResponse sendRequest(CreateRequestFriendDto createRequestFriendDto) throws JsonProcessingException;
 
    FriendShipResponse getFriendShip(String userId);
 

@@ -40,7 +40,7 @@ public class FriendShipService implements IFriendShipService {
     INoticeService iNoticeService;
 
     @Override
-    public FriendRequestResponse sendRequest(CreateRequestFriendDto createRequestFriendDto) {
+    public FriendRequestResponse sendRequest(CreateRequestFriendDto createRequestFriendDto) throws JsonProcessingException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users userSend = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         Users userReceiver = usersRepository.findById(createRequestFriendDto.getReceiver()).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
@@ -54,7 +54,8 @@ public class FriendShipService implements IFriendShipService {
                 .sender(userSend)
                 .build();
         friendShipRepository.save(friendShip);
-
+        String message = userSend.getName() + " Send You A Request Friend !!";
+        iNoticeService.sendNotification(userReceiver, TypeNotice.FRIEND.toString(),message, null,userSend.getId());
         return FriendRequestResponse.builder()
                 .receiver(userReceiver.getName())
                 .sender(userSend.getName())
