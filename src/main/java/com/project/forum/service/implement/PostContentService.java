@@ -100,7 +100,7 @@ public class PostContentService implements IPostContentService {
                     .status(false)
                     .build();
             noticesRepository.save(notices);
-            noticeService.sendNotification(user, TypeNotice.POST.toString(),message, posts.getId());
+            noticeService.sendNotification(user, TypeNotice.POST.toString(),message, posts.getId(),null);
         } else {
             posts.setPostShow(true);
         }

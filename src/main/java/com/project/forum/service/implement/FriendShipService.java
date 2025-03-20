@@ -1,5 +1,6 @@
 package com.project.forum.service.implement;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.forum.dto.requests.friend.CreateRequestFriendDto;
 import com.project.forum.dto.responses.friend.FriendRequestResponse;
 import com.project.forum.dto.responses.friend.FriendShipResponse;
@@ -8,10 +9,12 @@ import com.project.forum.enity.FriendShip;
 import com.project.forum.enity.Users;
 import com.project.forum.enums.ErrorCode;
 import com.project.forum.enums.StatusFriend;
+import com.project.forum.enums.TypeNotice;
 import com.project.forum.exception.WebException;
 import com.project.forum.repository.FriendShipRepository;
 import com.project.forum.repository.UsersRepository;
 import com.project.forum.service.IFriendShipService;
+import com.project.forum.service.INoticeService;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +36,8 @@ public class FriendShipService implements IFriendShipService {
     FriendShipRepository friendShipRepository;
 
     UsersRepository usersRepository;
+
+    INoticeService iNoticeService;
 
     @Override
     public FriendRequestResponse sendRequest(CreateRequestFriendDto createRequestFriendDto) {
@@ -84,13 +89,16 @@ public class FriendShipService implements IFriendShipService {
     }
 
     @Override
-    public boolean acceptFriendRequest(String userId) {
+    public boolean acceptFriendRequest(String userId) throws JsonProcessingException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        Users users1 = usersRepository.findById(userId).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         FriendShip friendShip = friendShipRepository.findByReceiver_IdAndSender_Id(users.getId(),userId)
                 .orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
         friendShip.setStatus(StatusFriend.FRIENDS.getStatus());
         friendShipRepository.save(friendShip);
+        String message = users.getName() + " Accept Your Request Friend !!";
+        iNoticeService.sendNotification(users1, TypeNotice.FRIEND.toString(),message, null,users.getId());
         return true;
     }
 

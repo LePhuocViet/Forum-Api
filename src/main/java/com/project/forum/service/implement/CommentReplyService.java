@@ -63,7 +63,7 @@ public class CommentReplyService implements ICommentReplyService {
 
         String message = users.getName() + " replied to your comment: " +
                 createCommentReplyDto.getContent().substring(0, Math.min(createCommentReplyDto.getContent().length(), 12)) + " ...";
-        noticeService.sendNotification(commentReply.getUsers(), TypeNotice.COMMENT_REPLY.toString(),message, parentComment.getId());
+        noticeService.sendNotification(commentReply.getUsers(), TypeNotice.COMMENT_REPLY.toString(),message, parentComment.getPosts().getId(),null);
         return CommentResponse.builder()
                 .id(commentReply.getId())
                 .is_user(true)

@@ -4,7 +4,8 @@ public enum TypeNotice {
     COMMENT,
     LIKE,
     COMMENT_REPLY,
-    POST
+    POST,
+    FRIEND
     ;
 
 

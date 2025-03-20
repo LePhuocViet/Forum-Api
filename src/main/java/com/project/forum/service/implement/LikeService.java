@@ -89,7 +89,7 @@ public class LikeService implements ILikeService {
                 }
             }
 
-            noticeService.sendNotification(posts.getUsers(), TypeNotice.LIKE.toString(),message, postOwnerId );
+            noticeService.sendNotification(posts.getUsers(), TypeNotice.LIKE.toString(),message, postOwnerId,null );
         }
 
         return LikeResponse.builder()

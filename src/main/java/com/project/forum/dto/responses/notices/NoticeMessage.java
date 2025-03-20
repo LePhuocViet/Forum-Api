@@ -17,4 +17,6 @@ public class NoticeMessage {
 
     String postId;
 
+    String userId;
+
 }

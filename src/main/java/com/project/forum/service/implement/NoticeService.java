@@ -35,7 +35,7 @@ public class NoticeService implements INoticeService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public void sendNotification(Users users, String type, String message, String postId) throws JsonProcessingException {
+    public void sendNotification(Users users, String type, String message, String postId, String userId) throws JsonProcessingException {
 
         if (noticesRepository.existsNoticesByTypeAndPost_idAndUser_id(type, postId, users.getId())) {
             noticesRepository.updateNoticeMessage(type,postId,users.getId(),message);
@@ -58,10 +58,19 @@ public class NoticeService implements INoticeService {
                     .build();
             noticesRepository.save(notice);
             String destination = "/queue/notifications";
-            NoticeMessage noticeMessage = NoticeMessage.builder()
-                    .message(message)
-                    .postId(postId)
-                    .build();
+            NoticeMessage noticeMessage;
+            if (postId != null){
+                 noticeMessage = NoticeMessage.builder()
+                        .message(message)
+                        .postId(postId)
+                        .build();
+            } else {
+                noticeMessage = NoticeMessage.builder()
+                        .message(message)
+                        .userId(userId)
+                        .build();
+            }
+
             String resultNoticeJson = objectMapper.writeValueAsString(noticeMessage);
 //            String destination = "/topic/"+users.getId();
             messagingTemplate.convertAndSendToUser(users.getId().toString(), destination, noticeMessage.toString());

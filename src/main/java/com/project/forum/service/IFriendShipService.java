@@ -1,5 +1,6 @@
 package com.project.forum.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.forum.dto.requests.friend.CreateRequestFriendDto;
 import com.project.forum.dto.responses.friend.FriendRequestResponse;
 import com.project.forum.dto.responses.friend.FriendShipResponse;
@@ -12,7 +13,7 @@ public interface IFriendShipService {
 
    FriendShipResponse getFriendShip(String userId);
 
-   boolean acceptFriendRequest(String userId);
+   boolean acceptFriendRequest(String userId) throws JsonProcessingException;
 
    boolean rejectFriendRequest(String userId);
 
