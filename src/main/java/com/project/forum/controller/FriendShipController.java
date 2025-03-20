@@ -1,5 +1,6 @@
 package com.project.forum.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.project.forum.dto.requests.friend.CreateRequestFriendDto;
 import com.project.forum.dto.responses.friend.FriendRequestResponse;
 import com.project.forum.dto.responses.friend.FriendShipResponse;
@@ -22,7 +23,7 @@ public class FriendShipController {
     private final IFriendShipService friendRequestService;
     @SecurityRequirement(name = "BearerAuth")
     @PostMapping()
-    public ResponseEntity<ApiResponse<FriendRequestResponse>> sendRequest(@RequestBody CreateRequestFriendDto createRequestFriendDto) {
+    public ResponseEntity<ApiResponse<FriendRequestResponse>> sendRequest(@RequestBody CreateRequestFriendDto createRequestFriendDto) throws JsonProcessingException {
         return ResponseEntity.ok(ApiResponse.<FriendRequestResponse>builder()
                 .data(friendRequestService.sendRequest(createRequestFriendDto))
                 .build());
@@ -36,7 +37,7 @@ public class FriendShipController {
     }
     @SecurityRequirement(name = "BearerAuth")
     @PostMapping("/accept/{userId}")
-    public ResponseEntity<ApiResponse<Boolean>> acceptFriendRequest(@PathVariable String userId) {
+    public ResponseEntity<ApiResponse<Boolean>> acceptFriendRequest(@PathVariable String userId) throws JsonProcessingException {
         return ResponseEntity.ok(ApiResponse.<Boolean>builder()
                 .data(friendRequestService.acceptFriendRequest(userId))
                 .build());
