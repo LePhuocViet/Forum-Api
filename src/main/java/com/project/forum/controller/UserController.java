@@ -46,7 +46,7 @@ public class UserController {
                 .data(userService.setStatus(id, statusUser))
                 .build());
     }
-    @SecurityRequirement(name = "BearerAuth")
+
     @GetMapping()
     ResponseEntity<ApiResponse<Page<UserResponse>>> getAllUsers(@RequestParam(defaultValue = "0") Integer page,
                                                                 @RequestParam(defaultValue = "10") Integer size) {
