@@ -47,6 +47,7 @@ public class UserController {
                 .build());
     }
 
+    @SecurityRequirement(name = "BearerAuth")
     @GetMapping()
     ResponseEntity<ApiResponse<Page<UserResponse>>> getAllUsers(@RequestParam(defaultValue = "0") Integer page,
                                                                 @RequestParam(defaultValue = "10") Integer size) {
