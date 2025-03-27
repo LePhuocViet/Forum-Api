@@ -78,7 +78,6 @@ public class PostContentService implements IPostContentService {
                 .posts(posts)
                 .build();
 
-
         String promotion = promotionService.generatePromotionPostContentMessage(posts.getLanguage().getName(),
                 postContent.getTitle() + " " + postContent.getContent());
         String aiResponse = iaiService.getAnswer(promotion);
@@ -100,11 +99,13 @@ public class PostContentService implements IPostContentService {
                     .status(false)
                     .build();
             noticesRepository.save(notices);
+
             noticeService.sendNotification(user, TypeNotice.POST.toString(),message, posts.getId(),null);
         } else {
             posts.setPostShow(true);
         }
         postsRepository.save(posts);
+        postContentRepository.save(postContent);
         return postMapper.toPostsResponse(posts);
     }
 
