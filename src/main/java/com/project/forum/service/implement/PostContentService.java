@@ -88,6 +88,7 @@ public class PostContentService implements IPostContentService {
             posts.setPostShow(false);
             PostReports postReports = PostReports.builder()
                     .reason(message)
+                    .type_reports(TypePost.CONTENT.getPost())
                     .posts(posts)
                     .build();
             postReportsRepository.save(postReports);
@@ -106,6 +107,7 @@ public class PostContentService implements IPostContentService {
         }
         postsRepository.save(posts);
         postContentRepository.save(postContent);
+
         return postMapper.toPostsResponse(posts);
     }
 

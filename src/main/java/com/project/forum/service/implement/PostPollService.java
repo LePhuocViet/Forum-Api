@@ -76,6 +76,7 @@ public class PostPollService implements IPostPollService {
                 .users(users)
                 .type_post(TypePost.POLL.toString())
                 .language(language)
+                .postShow(true)
                 .created_at(LocalDateTime.now())
                 .build();
         posts = postsRepository.saveAndFlush(posts);

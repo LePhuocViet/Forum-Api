@@ -39,4 +39,5 @@ public class PostReports {
     @JoinColumn(name = "post_id")
     Posts posts;
 
+    String type_reports;
 }

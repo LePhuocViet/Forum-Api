@@ -70,15 +70,10 @@ public class NoticeService implements INoticeService {
                         .userId(userId)
                         .build();
             }
-
             String resultNoticeJson = objectMapper.writeValueAsString(noticeMessage);
 //            String destination = "/topic/"+users.getId();
             messagingTemplate.convertAndSendToUser(users.getId().toString(), destination, resultNoticeJson);
         }
-
-
-
-
     }
 
     @Override

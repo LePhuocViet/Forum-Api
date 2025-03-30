@@ -32,6 +32,7 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
             "OR pc.title LIKE %:content% " +
             "OR pp.question LIKE %:content%) " +
             "AND (:language IS NULL OR :language = '' OR lg.name = :language) " +
+            "AND p.postShow = true " +
             "GROUP BY p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, u.id, lg.name, u.id")
     Page<PostResponse> findAllPosts(@Param("content") String content,
                                     @Param("userId") String userId,
