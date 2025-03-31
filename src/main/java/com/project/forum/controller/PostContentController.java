@@ -1,6 +1,7 @@
 package com.project.forum.controller;
 
 import com.project.forum.dto.requests.post.CreatePostContentDto;
+import com.project.forum.dto.requests.post.UpdatePostContentDto;
 import com.project.forum.dto.responses.post.PostContentResponse;
 import com.project.forum.dto.responses.post.PostPollResponse;
 import com.project.forum.dto.responses.post.PostResponse;
@@ -37,5 +38,13 @@ public class PostContentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.<PostResponse>builder()
                 .data(postContentService.create(createPostContentDto))
                 .build());
+    }
+
+    @SecurityRequirement(name = "BearerAuth")
+    @PatchMapping("/{postId}")
+    ResponseEntity<ApiResponse<PostResponse>> update(@PathVariable String postId, @RequestBody UpdatePostContentDto updatePostContentDto) throws IOException {
+     return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.<PostResponse>builder()
+                     .data(postContentService.update(postId,updatePostContentDto))
+             .build())   ;
     }
 }

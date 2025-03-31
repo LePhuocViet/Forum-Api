@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PostMapper {
 
+
     @Mapping(target = "isShow",source = "postShow")
     @Mapping(target = "language",source = "language.name")
     PostResponse toPostsResponse(Posts posts);

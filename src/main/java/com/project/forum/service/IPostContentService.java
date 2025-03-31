@@ -13,6 +13,6 @@ public interface IPostContentService {
 
     PostResponse create(CreatePostContentDto createPostContentDto) throws IOException;
 
-    PostResponse update(UpdatePostContentDto updatePostContentDto) throws IOException;
+    PostResponse update(String id, UpdatePostContentDto updatePostContentDto) throws IOException;
 
 }

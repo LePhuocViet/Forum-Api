@@ -55,14 +55,14 @@ public class PostContentService implements IPostContentService {
 
     @Override
     public PostContentResponse findPostContentByPostId(String postId) {
-        return postContentRepository.findPostContentByPosts_Id(postId).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+        return postContentRepository.findByPosts_Id(postId).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
     }
 
     @Override
     public PostResponse create(CreatePostContentDto createPostContentDto) throws IOException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users user = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        Language language = languageRepository.findByName(createPostContentDto.getLanguage()).orElseThrow(() -> new WebException(ErrorCode.E_LANGUAGE_NOT_FOUND) );
+        Language language = languageRepository.findByName(createPostContentDto.getLanguage()).orElseThrow(() -> new WebException(ErrorCode.E_LANGUAGE_NOT_FOUND));
         Posts posts = Posts.builder()
                 .language(language)
                 .type_post(TypePost.CONTENT.toString())
@@ -83,7 +83,7 @@ public class PostContentService implements IPostContentService {
         String aiResponse = iaiService.getAnswer(promotion);
         JSONObject jsonObject = new JSONObject(aiResponse);
         boolean result = jsonObject.getBoolean("result");
-        if (!result){
+        if (!result) {
             String message = jsonObject.getString("message");
             posts.setPostShow(false);
             PostReports postReports = PostReports.builder()
@@ -101,50 +101,52 @@ public class PostContentService implements IPostContentService {
                     .build();
             noticesRepository.save(notices);
 
-            noticeService.sendNotification(user, TypeNotice.POST.toString(),message, posts.getId(),null);
+            noticeService.sendNotification(user, TypeNotice.POST.toString(), message, posts.getId(), null);
         } else {
             posts.setPostShow(true);
         }
         postsRepository.save(posts);
         postContentRepository.save(postContent);
-
-        return postMapper.toPostsResponse(posts);
+        PostResponse postResponse = postMapper.toPostsResponse(posts);
+        postResponse.setUser_post(true);
+        return postResponse;
     }
 
     @Override
-    public PostResponse update(UpdatePostContentDto updatePostContentDto) throws IOException {
-//        Posts posts =
-//
-//        String promotion = promotionService.generatePromotionPostContentMessage(posts.getLanguage().getName(),
-//                postContent.getTitle() + " " + postContent.getContent());
-//        String aiResponse = iaiService.getAnswer(promotion);
-//        JSONObject jsonObject = new JSONObject(aiResponse);
-//        boolean result = jsonObject.getBoolean("result");
-//        if (!result){
-//            String message = jsonObject.getString("message");
-//            posts.setPostShow(false);
-//            PostReports postReports = PostReports.builder()
-//                    .reason(message)
-//                    .posts(posts)
-//                    .build();
-//            postReportsRepository.save(postReports);
-//            Notices notices = Notices.builder()
-//                    .users(user)
-//                    .post_id(posts.getId())
-//                    .message(message)
-//                    .type(TypeNotice.POST.toString())
-//                    .status(false)
-//                    .build();
-//            noticesRepository.save(notices);
-//            noticeService.sendNotification(user, TypeNotice.POST.toString(),message, posts.getId());
-//        } else {
-//            posts.setPostShow(true);
-//        }
-//        postsRepository.save(posts);
-//        return postMapper.toPostsResponse(posts);
+    public PostResponse update(String id, UpdatePostContentDto updatePostContentDto) throws IOException {
+        PostContent postContent = postContentRepository.findPostContentsByPosts_Id(id).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
+        String promotion = promotionService.generatePromotionPostContentMessage(postContent.getPosts().getLanguage().getName(),
+                postContent.getTitle() + " " + postContent.getContent());
+        String aiResponse = iaiService.getAnswer(promotion);
+        JSONObject jsonObject = new JSONObject(aiResponse);
+        boolean result = jsonObject.getBoolean("result");
+        if (!result) {
+            String message = jsonObject.getString("message");
+            postContent.getPosts().setPostShow(false);
+            PostReports postReports = PostReports.builder()
+                    .reason(message)
+                    .posts(postContent.getPosts())
+                    .build();
+            postReportsRepository.save(postReports);
+            Notices notices = Notices.builder()
+                    .users(users)
+                    .post_id(postContent.getPosts().getId())
+                    .message(message)
+                    .type(TypeNotice.POST.toString())
+                    .status(false)
+                    .build();
+            noticesRepository.save(notices);
+            noticeService.sendNotification(users, TypeNotice.POST.toString(), message, postContent.getPosts().getId(), null);
+        } else {
+            postContent.getPosts().setPostShow(true);
+        }
+        postsRepository.save(postContent.getPosts());
+        PostResponse postResponse = postMapper.toPostsResponse(postContent.getPosts());
+        postResponse.setUser_post(true);
+        return postResponse;
 
-
-        return null;
     }
 
 }
