@@ -33,3 +33,8 @@ AI:
   key:
   url: "https://api.openai.com/v1/chat/completions"
 
+VnPay:
+  PayUrl: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+  ReturnUrl: "/vnpay-payment-return"
+  TmnCode: "WZWKQBWX"
+  HashSecret: "BKL2QUYRBNTY1MQY7XE2MTGT0KARJHT2"

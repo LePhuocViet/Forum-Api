@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity(name = "payment")
 @EntityListeners(AuditingEntityListener.class)
-public class Payment {
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
