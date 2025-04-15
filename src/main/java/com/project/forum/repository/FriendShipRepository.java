@@ -1,5 +1,6 @@
 package com.project.forum.repository;
 
+import com.project.forum.dto.responses.friend.FriendRequestListResponse;
 import com.project.forum.dto.responses.user.UserFriendResponse;
 import com.project.forum.enity.FriendShip;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -52,15 +54,23 @@ public interface FriendShipRepository extends JpaRepository<FriendShip, String> 
             WHEN f.sender.id = :userId THEN f.receiver.username
             ELSE f.sender.username
         END,
-        (SELECT COUNT(f2) FROM friend_ship f2 
+        (SELECT COUNT(f2) FROM FriendShip f2 
          WHERE (f2.sender.id = :userId OR f2.receiver.id = :userId) 
            AND f2.status = 'friends')
     )
-    FROM friend_ship f
+    FROM FriendShip f
     WHERE (f.sender.id = :userId OR f.receiver.id = :userId) 
       AND f.status = 'friends'
 """)
     Page<UserFriendResponse> getUserFriends(@Param("userId") String userId, Pageable pageable);
 
+
+    @Query("SELECT NEW com.project.forum.dto.responses.friend.FriendRequestListResponse( " +
+            "s.id, s.name, s.img, s.created) " +
+            "FROM FriendShip f " +
+            "LEFT JOIN f.sender s " +
+            "WHERE f.receiver.id = :userId ")
+    Page<FriendRequestListResponse> getListFriendRequest(@Param("userId") String id,
+                                                         Pageable pageable);
 
 }

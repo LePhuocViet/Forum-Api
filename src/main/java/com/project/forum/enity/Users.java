@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -18,7 +20,13 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Entity(name = "users")
+@Entity
+@Table(name = "users", indexes = {
+        @Index(name = "idx_users_username", columnList = "username"),
+        @Index(name = "idx_users_status", columnList = "status"),
+        @Index(name = "idx_users_name", columnList = "name"),
+        @Index(name = "idx_users_id", columnList = "id")
+})
 @EntityListeners(AuditingEntityListener.class)
 public class Users {
 
@@ -41,6 +49,10 @@ public class Users {
     String password;
 
     String status;
+
+    @CreatedDate
+    @Column(updatable = false)
+    LocalDateTime created;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST )
     Set<Roles> roles;

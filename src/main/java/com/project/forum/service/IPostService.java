@@ -16,4 +16,5 @@ public interface IPostService {
 
     Page<PostResponse> findPostByIdUser(String IdUser,Integer page, Integer size);
 
+    Page<PostResponse> findAllPostAdmin(Integer page, Integer size, String content, String language);
 }

@@ -8,14 +8,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface PostReportsRepository extends JpaRepository<PostReports, String> {
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostRepostResponse(" +
             " pr.reason, pr.createdAt, pr.posts.id, p.type_post, p.postShow) " +
-            "FROM posts p " +
-            "LEFT JOIN p.postReports pr " +
-            "WHERE (:postId IS NULL OR :postId = '' OR p.id = :postId)")
+            "FROM PostReports pr " +
+            "LEFT JOIN pr.posts p  " +
+            "WHERE (:postId IS NULL OR :postId = '' OR p.id = :postId) ")
     Page<PostRepostResponse> getPostRepost(@Param("postId") String postId, Pageable pageable);
 
-
+    Optional<PostReports> findPostReportsByPosts_Id(String postId);
 }

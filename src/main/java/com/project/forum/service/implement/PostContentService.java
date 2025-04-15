@@ -49,8 +49,6 @@ public class PostContentService implements IPostContentService {
 
     INoticeService noticeService;
 
-    NoticesRepository noticesRepository;
-
     PostContentHistoryRepository postContentHistoryRepository;
 
     @Override
@@ -78,8 +76,8 @@ public class PostContentService implements IPostContentService {
                 .posts(posts)
                 .build();
 
-        String promotion = promotionService.generatePromotionPostContentMessage(posts.getLanguage().getName(),
-                postContent.getTitle() + " " + postContent.getContent());
+        String promotion = promotionService.generatePromotionPostMessage(posts.getLanguage().getName(),
+                postContent.getTitle() + " " + postContent.getContent(),"post_content_template.txt");
         String aiResponse = iaiService.getAnswer(promotion);
         JSONObject jsonObject = new JSONObject(aiResponse);
         boolean result = jsonObject.getBoolean("result");
@@ -90,17 +88,9 @@ public class PostContentService implements IPostContentService {
                     .reason(message)
                     .type_reports(TypePost.CONTENT.getPost())
                     .posts(posts)
+                    .createdAt(LocalDateTime.now())
                     .build();
             postReportsRepository.save(postReports);
-            Notices notices = Notices.builder()
-                    .users(user)
-                    .post_id(posts.getId())
-                    .message(message)
-                    .type(TypeNotice.POST.toString())
-                    .status(false)
-                    .build();
-            noticesRepository.save(notices);
-
             noticeService.sendNotification(user, TypeNotice.POST.toString(), message, posts.getId(), null);
         } else {
             posts.setPostShow(true);
@@ -114,35 +104,54 @@ public class PostContentService implements IPostContentService {
 
     @Override
     public PostResponse update(String id, UpdatePostContentDto updatePostContentDto) throws IOException {
+        Posts posts = postsRepository.findById(id).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+        PostContentHistory postContentHistoryFirst = PostContentHistory.builder()
+                .posts(posts)
+                .content(posts.getPostContent().getContent())
+                        .title(posts.getPostContent().getTitle())
+                .created_at(posts.getCreated_at())
+                .build();
+        postContentHistoryRepository.save(postContentHistoryFirst);
         PostContent postContent = postContentRepository.findPostContentsByPosts_Id(id).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+        postContent.setContent(updatePostContentDto.getContent());
+        postContent.setTitle(updatePostContentDto.getTitle());
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Users users = usersRepository.findByUsername(username).orElseThrow(() -> new WebException(ErrorCode.E_USER_NOT_FOUND));
-        String promotion = promotionService.generatePromotionPostContentMessage(postContent.getPosts().getLanguage().getName(),
-                postContent.getTitle() + " " + postContent.getContent());
+        String promotion = promotionService.generatePromotionPostMessage(postContent.getPosts().getLanguage().getName(),
+                postContent.getTitle() + " " + postContent.getContent(),"post_content_template.txt");
         String aiResponse = iaiService.getAnswer(promotion);
         JSONObject jsonObject = new JSONObject(aiResponse);
         boolean result = jsonObject.getBoolean("result");
         if (!result) {
+
             String message = jsonObject.getString("message");
             postContent.getPosts().setPostShow(false);
-            PostReports postReports = PostReports.builder()
-                    .reason(message)
-                    .posts(postContent.getPosts())
-                    .build();
-            postReportsRepository.save(postReports);
-            Notices notices = Notices.builder()
-                    .users(users)
-                    .post_id(postContent.getPosts().getId())
-                    .message(message)
-                    .type(TypeNotice.POST.toString())
-                    .status(false)
-                    .build();
-            noticesRepository.save(notices);
+            if (!postReportsRepository.findPostReportsByPosts_Id(postContent.getPosts().getId()).isEmpty()){
+                PostReports postReports = postReportsRepository.findPostReportsByPosts_Id(id).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+                postReports.setReason(message);
+                postReportsRepository.save(postReports);
+            } else {
+                PostReports postReports = PostReports.builder()
+                        .reason(message)
+                        .type_reports(TypePost.CONTENT.getPost())
+                        .posts(postContent.getPosts())
+                        .build();
+                postReportsRepository.save(postReports);
+            }
+
             noticeService.sendNotification(users, TypeNotice.POST.toString(), message, postContent.getPosts().getId(), null);
         } else {
             postContent.getPosts().setPostShow(true);
         }
+        PostContentHistory postContentHistory =  PostContentHistory.builder()
+                .content(updatePostContentDto.getContent())
+                .title(postContent.getTitle())
+                .created_at(LocalDateTime.now())
+                .posts(posts)
+                .build();
+        postContentHistoryRepository.save(postContentHistory);
         postsRepository.save(postContent.getPosts());
+        postContentRepository.save(postContent);
         PostResponse postResponse = postMapper.toPostsResponse(postContent.getPosts());
         postResponse.setUser_post(true);
         return postResponse;
