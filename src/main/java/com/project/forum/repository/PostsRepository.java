@@ -67,7 +67,11 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
 
     @Query("SELECT NEW com.project.forum.dto.responses.post.PostResponse( " +
             "p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, u.id, lg.name,  " +
-            "(CASE WHEN p.users.id = :userId THEN true ELSE false END) , FALSE , COUNT(DISTINCT l.id) , COUNT(DISTINCT c.id), p.postShow," +
+            "(CASE WHEN p.users.id = :userId THEN true ELSE false END), " +
+            "FALSE, " +
+            "COUNT(DISTINCT l.id), " +
+            "COUNT(DISTINCT c.id), " +
+            "p.postShow, " +
             "(CASE WHEN EXISTS (SELECT ad FROM Advertisement ad WHERE ad.posts.id = p.id AND ad.status = TRUE) THEN true ELSE false END)" +
             ") " +
             "FROM Posts p " +
@@ -75,9 +79,10 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
             "LEFT JOIN p.comments c " +
             "LEFT JOIN p.likes l " +
             "LEFT JOIN p.language lg " +
-            "WHERE p.id = :id " +
-            "GROUP BY p.id, p.type_post, p.created_at, p.updated_at, u.username, p.users.id")
+            "WHERE p.id = :id AND (p.postShow = true OR (p.postShow = false AND p.users.id = :userId)) " +
+            "GROUP BY p.id, p.type_post, p.created_at, p.updated_at, u.username, u.img, u.id, lg.name, p.users.id, p.postShow")
     Optional<PostResponse> findPostById(@Param("id") String id, @Param("userId") String userId);
+
 
 
     @Modifying
@@ -116,17 +121,17 @@ public interface PostsRepository extends JpaRepository<Posts, String> {
             "COUNT(DISTINCT p.id), " +
             "COUNT(DISTINCT c.id), " +
             "COUNT(DISTINCT l.id), " +
-            "COUNT(DISTINCT u.id), " +
-            "MIN(p.created_at), " +
-            "MAX(p.created_at)) " +
+            "(SELECT COUNT(DISTINCT u2.id) FROM Users u2 WHERE (:from IS NULL OR u2.created >= :from) AND (:to IS NULL OR u2.created <= :to)), " +
+            "CASE WHEN :from IS NULL THEN (SELECT MIN(u3.created) FROM Users u3) ELSE :from END, " +
+            "CASE WHEN :to IS NULL THEN CAST(CURRENT_TIMESTAMP as java.time.LocalDateTime) ELSE :to END) " +
             "FROM Posts p " +
             "LEFT JOIN p.users u " +
             "LEFT JOIN p.comments c " +
             "LEFT JOIN p.likes l " +
-            "WHERE p.created_at BETWEEN :from AND :to " +
-            "AND u.created BETWEEN :from AND :to")
-    PostTotalResponse getPostTotalStatsByUserAndTime(@Param("from") LocalDateTime from,
-                                                     @Param("to") LocalDateTime to);
+            "WHERE (:from IS NULL OR p.created_at >= :from ) " +
+            "AND p.postShow = true " +
+            "AND (:to IS NULL OR p.created_at <= :to)")
+    PostTotalResponse getPostStats(@Param("from") LocalDateTime from, @Param("to") LocalDateTime to);
 
 
 }

@@ -1,6 +1,6 @@
-package com.project.forum.dto.requests.ai;
+package com.project.forum.dto.requests.user;
 
-import jakarta.validation.constraints.NotNull;
+import com.project.forum.enums.StatusUser;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,8 +10,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionRequest {
-
-    @NotNull
-    String question;
+public class StatusRequest {
+    StatusUser statusUser;
 }

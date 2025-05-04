@@ -30,7 +30,6 @@ import java.time.LocalDateTime;
 public class Advertisement {
 
     @Id
-
     String id;
 
     int views;
@@ -45,7 +44,7 @@ public class Advertisement {
     @JoinColumn(name = "post_id")
     Posts posts;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "ads_package_id")
     AdsPackage adsPackage;
 
