@@ -2,10 +2,10 @@
 
 ## 🧩 Giới thiệu
 
-Đây là backend API cho dự án **XDDDCSKT1484** – một diễn đàn chia sẻ kiến thức đa ngôn ngữ, tích hợp AI để hỗ trợ duyệt và cảnh báo nội dung không lành mạnh.  
+Đây là backend API cho dự án – một diễn đàn chia sẻ kiến thức đa ngôn ngữ, tích hợp AI để hỗ trợ duyệt và cảnh báo nội dung không lành mạnh.  
 Dự án được phát triển bởi nhóm sinh viên Khoa Công nghệ Thông tin, với mục tiêu xây dựng một nền tảng học thuật an toàn, thân thiện và thông minh.
 
-👉 [Xem trên GitHub](https://github.com/Khoa-CNTT/XDDDCSKT1484)
+
 
 ---
 
@@ -32,7 +32,7 @@ Dự án được phát triển bởi nhóm sinh viên Khoa Công nghệ Thông 
 
 ### 2. Cài đặt 
 - Tải key Api AI:
-- Truy cập file XDDDCSKT1484\backend_api\src\main\resources\application.yaml
+- Truy cập file src\main\resources\application.yaml
 - Thêm key vào
 ```bash
 # Thêm <key> vào 
