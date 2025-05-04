@@ -1,6 +1,8 @@
 package com.project.forum.service.implement;
 
+import com.project.forum.dto.requests.post.PostShowRequest;
 import com.project.forum.dto.responses.post.PostResponse;
+import com.project.forum.dto.responses.post.PostTotalResponse;
 import com.project.forum.enity.Advertisement;
 import com.project.forum.enity.Comments;
 import com.project.forum.enity.Posts;
@@ -21,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -68,16 +71,16 @@ public class PostService implements IPostService {
         }
 
         Page<Advertisement> randomAdsPage = advertisementRepository.findRandomAdvertisement(PageRequest.of(0, 1));
-        if (!randomAdsPage.isEmpty()) {
+        if (!randomAdsPage.isEmpty() && !postPage.isEmpty()) {
             Advertisement randomAd = randomAdsPage.getContent().get(0);
             Optional<PostResponse> adPostOpt = postsRepository.findPostById(randomAd.getPosts().getId(), userId);
-
             adPostOpt.ifPresent(adPost -> {
                 Advertisement advertisement = advertisementRepository.findAdsByPostId(adPost.getId()).orElseThrow(() -> new WebException(ErrorCode.E_ADS_NOT_FOUND));
                 advertisement.setViews(advertisement.getViews()+1);
                 adPost.setAds(true);
                 resultList.add(adPost);
             });
+            advertisementRepository.save(randomAd);
         }
 
         long total = postPage.getTotalElements() + (resultList.size() > postPage.getContent().size() ? 1 : 0);
@@ -149,6 +152,24 @@ public class PostService implements IPostService {
         Page<PostResponse> posts = postsRepository.findAllPostsAdmin(content,null,language,pageable);
 
         return posts;
+    }
+
+    @Override
+    public PostTotalResponse postTotal(LocalDateTime start, LocalDateTime end) {
+        return postsRepository.getPostStats(start,end);
+    }
+
+    @Override
+    public PostResponse showPostById(String id, PostShowRequest postShowRequest) {
+        Posts posts = postsRepository.findById(id).orElseThrow(() -> new WebException(ErrorCode.E_POST_NOT_FOUND));
+        posts.setPostShow(postShowRequest.isStatus());
+        postsRepository.save(posts);
+        return PostResponse.builder()
+                .isShow(posts.isPostShow())
+                .type_post(posts.getType_post())
+                .created_at(posts.getCreated_at())
+                .id(posts.getId())
+                .build();
     }
 
 

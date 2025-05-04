@@ -1,6 +1,5 @@
-package com.project.forum.dto.requests.ai;
+package com.project.forum.dto.requests.post;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -10,8 +9,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuestionRequest {
+public class PostShowRequest {
 
-    @NotNull
-    String question;
+    boolean status;
 }
